@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useTransition } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import RoyalDatePicker from "./components/RoyalDatePicker";
 import LiveCardPreview from "./components/LiveCardPreview";
 
@@ -68,18 +67,28 @@ const DEFAULT_FORM: FormData = {
 const STORAGE_KEY = "rupi_wedding_draft";
 const TOTAL_STEPS = 10;
 
-const STEP_TITLES = [
-  "Welcome",
-  "Family Details",
-  "Divine Blessings",
-  "The Bride",
-  "The Groom",
-  "Auspicious Dates",
-  "Venues & Locations",
-  "R.S.V.P.",
-  "Best Compliments",
-  "Review & Submit",
-];
+export interface StepConfig {
+  number: number;
+  title: string;
+  sectionBadge: string;
+  isSkippable: boolean;
+  statusBadge: "Required" | "Optional";
+}
+
+export const STEP_CONFIGS: Record<number, StepConfig> = {
+  1: { number: 1, title: "Welcome", sectionBadge: "Intro", isSkippable: false, statusBadge: "Required" },
+  2: { number: 2, title: "Parents' Information", sectionBadge: "Section 1 • Parents", isSkippable: false, statusBadge: "Required" },
+  3: { number: 3, title: "Grandparents & Elders", sectionBadge: "Section 2 • Elders", isSkippable: true, statusBadge: "Optional" },
+  4: { number: 4, title: "Bride's Details", sectionBadge: "Section 3 • Bride", isSkippable: true, statusBadge: "Optional" },
+  5: { number: 5, title: "Groom & Family Details", sectionBadge: "Section 4 • Groom", isSkippable: false, statusBadge: "Required" },
+  6: { number: 6, title: "Ceremony Dates", sectionBadge: "Section 5 • Dates", isSkippable: true, statusBadge: "Optional" },
+  7: { number: 7, title: "Venues & Addresses", sectionBadge: "Section 6 • Venues", isSkippable: false, statusBadge: "Required" },
+  8: { number: 8, title: "R.S.V.P. Contacts", sectionBadge: "Section 7 • R.S.V.P.", isSkippable: false, statusBadge: "Required" },
+  9: { number: 9, title: "Well-Wishers & Compliments", sectionBadge: "Section 8 • Well-Wishers", isSkippable: true, statusBadge: "Optional" },
+  10: { number: 10, title: "Review and Submit", sectionBadge: "Final Step • Review", isSkippable: false, statusBadge: "Required" },
+};
+
+const STEP_TITLES = Object.values(STEP_CONFIGS).map((s) => s.title);
 
 function formatMobileNumber(val: string): string {
   // Strip all non-digit characters, limit to 10 digits
@@ -100,6 +109,7 @@ export default function QuestionnairePage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submissionSuccess, setSubmissionSuccess] = useState<{ id: number; submitted_at: string } | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [stepError, setStepError] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
   // Load draft from localStorage on mount
@@ -183,17 +193,67 @@ export default function QuestionnairePage() {
     updateField("best_compliments", updated);
   };
 
+  // Step Validation Logic
+  const validateCurrentStep = (step: number): string | null => {
+    if (step === 2) {
+      if (!formData.father_name.trim()) return "Please enter Father's Name.";
+      if (!formData.mother_name.trim()) return "Please enter Mother's Name.";
+      if (!formData.family_address.trim()) return "Please enter your Family Residence Address.";
+      const m1Digits = formData.mobile_1.replace(/\D/g, "");
+      if (m1Digits.length < 10) return "Please enter a valid 10-digit Primary Contact Mobile Number.";
+    }
+    if (step === 5) {
+      if (!formData.groom_name.trim()) return "Please enter Groom's Full Name.";
+    }
+    if (step === 7) {
+      if (!formData.wedding_reception_venue.trim()) return "Please enter the Wedding & Reception Venue.";
+    }
+    if (step === 8) {
+      const hasValidRsvp = formData.rsvp_names.some((name) => name.trim().length > 0);
+      if (!hasValidRsvp) return "Please enter at least one R.S.V.P. Contact Name.";
+    }
+    return null;
+  };
+
   // Step Navigation
   const goToNextStep = () => {
+    setStepError(null);
+    const err = validateCurrentStep(currentStep);
+    if (err) {
+      setStepError(err);
+      return;
+    }
+
     if (currentStep < TOTAL_STEPS) {
       startTransition(() => {
-        setCurrentStep((s) => s + 1);
+        const next = currentStep + 1;
+        setCurrentStep(next);
+        if (next > 1) {
+          sessionStorage.setItem("rupi_form_started", "true");
+          window.dispatchEvent(new Event("weddingFormStarted"));
+        }
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+  };
+
+  const skipStep = () => {
+    setStepError(null);
+    if (currentStep < TOTAL_STEPS) {
+      startTransition(() => {
+        const next = currentStep + 1;
+        setCurrentStep(next);
+        if (next > 1) {
+          sessionStorage.setItem("rupi_form_started", "true");
+          window.dispatchEvent(new Event("weddingFormStarted"));
+        }
         window.scrollTo({ top: 0, behavior: "smooth" });
       });
     }
   };
 
   const goToPrevStep = () => {
+    setStepError(null);
     if (currentStep > 1) {
       startTransition(() => {
         setCurrentStep((s) => s - 1);
@@ -203,6 +263,7 @@ export default function QuestionnairePage() {
   };
 
   const jumpToStep = (stepNumber: number) => {
+    setStepError(null);
     startTransition(() => {
       setCurrentStep(stepNumber);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -278,15 +339,10 @@ export default function QuestionnairePage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3">
-            {/* Admin Portal Link */}
-            <Link
-              href="/admin"
-              className="text-xs font-semibold text-stone-600 hover:text-maroon px-2 py-1 transition-colors"
-              title="Admin Portal"
-            >
-              Admin 🔒
-            </Link>
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-semibold text-amber-800/80 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
+              For Bhai ❤️
+            </span>
           </div>
         </div>
 
@@ -389,7 +445,7 @@ export default function QuestionnairePage() {
           <div className="wedding-card fade-in">
             {/* ── STEP 1: Welcome ── */}
             {currentStep === 1 && (
-              <div className="text-center py-4">
+              <div className="text-center py-6 px-2 sm:px-4">
                 <div className="flex justify-center mb-4">
                   <div className="royal-crest-wrapper pulse-gold">
                     <Image
@@ -407,13 +463,33 @@ export default function QuestionnairePage() {
                   ॥ श्री गणेशाय नमः ॥
                 </div>
 
-                <h1 className="section-header text-2xl sm:text-3xl text-maroon mb-3">
+                <h1 className="section-header text-2xl sm:text-3xl text-maroon mb-2">
                   Dear Rupi ❤️
                 </h1>
 
-                <p className="section-subtitle max-w-lg mx-auto text-base sm:text-lg mb-8 leading-relaxed">
-                  To keep all your wedding details organized in one easy place without repeated messages and calls, please fill in your details here at your own comfortable pace.
+                <p className="text-xs sm:text-sm font-semibold text-amber-900 tracking-wide uppercase mb-3 font-display">
+                  Wedding Information Intake Form
                 </p>
+
+                <p className="section-subtitle max-w-lg mx-auto text-sm sm:text-base mb-6 leading-relaxed text-stone-700">
+                  This form is created for you to share your wedding ceremony details directly with Bhai. 
+                  Instead of repeated messages and phone calls, please share the accurate names, spellings, dates, and venues here. Everything is saved automatically on your device as you type so you can fill it comfortably at your own pace.
+                </p>
+
+                <div className="max-w-md mx-auto mb-8 bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 text-xs text-amber-950 text-left space-y-2">
+                  <div className="flex items-center gap-2 font-bold text-maroon">
+                    <span>📋</span>
+                    <span>Quick Overview:</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-rose-700 font-bold">★ Must Fill:</span>
+                    <span>Parents&apos; details, Groom&apos;s name, Venues, and RSVP contacts.</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-emerald-700 font-bold">✓ Optional:</span>
+                    <span>Grandparents, Nickname/Monogram, Dates (pre-filled), and Well-wishers.</span>
+                  </div>
+                </div>
 
                 <button
                   id="btn-begin-questionnaire"
@@ -426,16 +502,21 @@ export default function QuestionnairePage() {
               </div>
             )}
 
-            {/* ── STEP 2: "A Cordial Invitation From" (Family Details) ── */}
+            {/* ── STEP 2: Parents' Information ── */}
             {currentStep === 2 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 1 • Family Details
-                  </span>
-                  <h2 className="section-header mt-1">A Cordial Invitation From</h2>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 1 • Parents&apos; Information
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase rounded-full bg-rose-50 text-rose-800 border border-rose-300">
+                      ★ Must Fill
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">Parents&apos; Details</h2>
                   <p className="section-subtitle">
-                    Enter the names of the esteemed parents sending this sacred invitation.
+                    Please provide the names and contact details of parents.
                   </p>
                 </div>
 
@@ -459,14 +540,16 @@ export default function QuestionnairePage() {
                       <input
                         id="father_name"
                         type="text"
-                        placeholder="e.g. Ramesh Kumar Sharma"
+                        placeholder="e.g. Shiva"
                         value={formData.father_name}
                         onChange={(e) => updateField("father_name", e.target.value)}
                         className="wedding-input flex-1"
                         required
                       />
                     </div>
-                    <p className="field-note">✦ Please ensure spellings match official family records.</p>
+                    <p className="field-note">
+                      ✦ I know the names, but just making sure of the exact spellings and what you prefer to use ❤️
+                    </p>
                   </div>
 
                   {/* Mother's Name */}
@@ -488,7 +571,7 @@ export default function QuestionnairePage() {
                       <input
                         id="mother_name"
                         type="text"
-                        placeholder="e.g. Sunita Sharma"
+                        placeholder="e.g. Meena / Ishwari"
                         value={formData.mother_name}
                         onChange={(e) => updateField("mother_name", e.target.value)}
                         className="wedding-input flex-1"
@@ -500,7 +583,7 @@ export default function QuestionnairePage() {
                   {/* Family Residence Address */}
                   <div>
                     <label className="field-label" htmlFor="family_address">
-                      Family Residence Address
+                      Family Residence Address *
                     </label>
                     <textarea
                       id="family_address"
@@ -508,9 +591,10 @@ export default function QuestionnairePage() {
                       value={formData.family_address}
                       onChange={(e) => updateField("family_address", e.target.value)}
                       className="wedding-input wedding-textarea"
+                      required
                     />
                     <p className="field-note">
-                      ✦ Printed on the invitation card under &quot;Residence&quot;.
+                      ✦ Home address for family records and ceremony locations.
                     </p>
                   </div>
 
@@ -518,7 +602,7 @@ export default function QuestionnairePage() {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <label className="field-label" htmlFor="mobile_1">
-                        Primary Contact Mobile
+                        Primary Contact Mobile *
                       </label>
                       <input
                         id="mobile_1"
@@ -530,6 +614,7 @@ export default function QuestionnairePage() {
                         value={formData.mobile_1}
                         onChange={(e) => updateField("mobile_1", formatMobileNumber(e.target.value))}
                         className="wedding-input tracking-wider font-mono text-base"
+                        required
                       />
                       <p className="field-note">✦ 10 digits (e.g. 98765 43210)</p>
                     </div>
@@ -555,16 +640,21 @@ export default function QuestionnairePage() {
               </div>
             )}
 
-            {/* ── STEP 3: Blessings & Elders ── */}
+            {/* ── STEP 3: Grandparents & Elders ── */}
             {currentStep === 3 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 2 • Revered Elders
-                  </span>
-                  <h2 className="section-header mt-1">With the Heavenly Blessings Of</h2>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 2 • Revered Elders
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-semibold tracking-wider uppercase rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
+                      ✓ Can Skip / Optional
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">Grandparents &amp; Elders</h2>
                   <p className="section-subtitle">
-                    Honoring beloved grandparents whose divine grace guides this sacred union.
+                    Honoring beloved grandparents whose blessings guide this celebration (optional).
                   </p>
                 </div>
 
@@ -576,12 +666,12 @@ export default function QuestionnairePage() {
                     <input
                       id="grandfather_name"
                       type="text"
-                      placeholder="e.g. Late Sh. Moolchand Sharma"
+                      placeholder="e.g. Tata"
                       value={formData.grandfather_name}
                       onChange={(e) => updateField("grandfather_name", e.target.value)}
                       className="wedding-input"
                     />
-                    <p className="field-note">✦ You may include honorifics such as &quot;Late Sh.&quot; or &quot;Dada Ji&quot;.</p>
+                    <p className="field-note">✦ You may include honorifics or pet names like &quot;Tata&quot; or &quot;Dada Ji&quot;.</p>
                   </div>
 
                   <div>
@@ -591,27 +681,32 @@ export default function QuestionnairePage() {
                     <input
                       id="grandmother_name"
                       type="text"
-                      placeholder="e.g. Late Smt. Bhagwati Devi"
+                      placeholder="e.g. Aaya"
                       value={formData.grandmother_name}
                       onChange={(e) => updateField("grandmother_name", e.target.value)}
                       className="wedding-input"
                     />
-                    <p className="field-note">✦ Leave blank if you prefer not to include ancestors on the card.</p>
+                    <p className="field-note">✦ You may include honorifics or pet names like &quot;Aaya&quot; or &quot;Dadi Ji&quot; (or leave blank).</p>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* ── STEP 4: The Bride (₹upi) ── */}
+            {/* ── STEP 4: The Bride ── */}
             {currentStep === 4 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 3 • The Bride
-                  </span>
-                  <h2 className="section-header mt-1">The Radiant Bride</h2>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 3 • The Bride
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-semibold tracking-wider uppercase rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
+                      ✓ Pre-filled (Can Skip)
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">Bride&apos;s Details</h2>
                   <p className="section-subtitle">
-                    The queen of this celebration.
+                    Your name is already pre-filled. You can add an optional nickname or monogram.
                   </p>
                 </div>
 
@@ -639,13 +734,13 @@ export default function QuestionnairePage() {
                     <input
                       id="bride_initials"
                       type="text"
-                      placeholder="e.g. ₹upi or initials"
+                      placeholder="e.g. M. 😊"
                       value={formData.bride_initials}
                       onChange={(e) => updateField("bride_initials", e.target.value)}
                       className="wedding-input"
                     />
                     <p className="field-note">
-                      ✦ If you want to add your nickname or initials (like ₹upi or R&amp;A)
+                      ✦ If you really want to use initials or a monogram like M. 😊
                     </p>
                   </div>
                 </div>
@@ -656,12 +751,17 @@ export default function QuestionnairePage() {
             {currentStep === 5 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 4 • The Groom
-                  </span>
-                  <h2 className="section-header mt-1">The Groom & His Family</h2>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 4 • The Groom
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase rounded-full bg-rose-50 text-rose-800 border border-rose-300">
+                      ★ Must Fill
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">Groom &amp; Family Details</h2>
                   <p className="section-subtitle">
-                    Details of the handsome groom and his honorable parents.
+                    Please provide the groom&apos;s full name and his parents&apos; names.
                   </p>
                 </div>
 
@@ -673,12 +773,13 @@ export default function QuestionnairePage() {
                     <input
                       id="groom_name"
                       type="text"
-                      placeholder="Attapattu"
+                      placeholder="रामधारी सिंह दिनकर"
                       value={formData.groom_name}
                       onChange={(e) => updateField("groom_name", e.target.value)}
                       className="wedding-input font-display font-semibold text-lg"
                       required
                     />
+                    <p className="field-note">✦ Enter full name (e.g. रामधारी सिंह दिनकर)</p>
                   </div>
 
                   {/* Groom Mother */}
@@ -734,20 +835,33 @@ export default function QuestionnairePage() {
                       />
                     </div>
                   </div>
+
+                  {/* Late/Deceased guidance note */}
+                  <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs text-amber-950 flex items-start gap-2">
+                    <span className="text-sm">🕊️</span>
+                    <span>
+                      <strong>Honorific Note:</strong> If any parent or elder is dearly remembered (Late / Swargiya), please select the <em>&quot;Late&quot;</em> prefix from the dropdown so they are respectfully honored.
+                    </span>
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* ── STEP 6: Auspicious Dates & Times ── */}
+            {/* ── STEP 6: Auspicious Dates ── */}
             {currentStep === 6 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 5 • Auspicious Dates
-                  </span>
-                  <h2 className="section-header mt-1">Sacred Wedding Dates</h2>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 5 • Auspicious Dates
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-semibold tracking-wider uppercase rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
+                      ✓ Pre-filled (Can Skip)
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">Ceremony Dates</h2>
                   <p className="section-subtitle">
-                    Select the mahurat and ceremony dates using the Royal Calendar.
+                    Pre-set with auspicious dates (30 Jan 2027 for Wedding, 29 Jan 2027 for Haldi/Mehndi). You can change them if needed.
                   </p>
                 </div>
 
@@ -791,16 +905,21 @@ export default function QuestionnairePage() {
               </div>
             )}
 
-            {/* ── STEP 7: Venues & Locations (Smart Autofill) ── */}
+            {/* ── STEP 7: Venues & Addresses ── */}
             {currentStep === 7 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 6 • Venues &amp; Locations
-                  </span>
-                  <h2 className="section-header mt-1">Ceremony Venues &amp; Locations</h2>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 6 • Venues &amp; Addresses
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase rounded-full bg-rose-50 text-rose-800 border border-rose-300">
+                      ★ Must Fill
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">Ceremony Venues &amp; Addresses</h2>
                   <p className="section-subtitle">
-                    Tell us where each wedding ceremony will take place.
+                    Confirm the wedding reception location and any pre-wedding venues.
                   </p>
 
                   <div className="mt-3.5 bg-amber-50/80 border border-amber-300/80 rounded-xl p-3.5 text-xs text-amber-950 space-y-1.5">
@@ -809,7 +928,7 @@ export default function QuestionnairePage() {
                       <span>How this works:</span>
                     </p>
                     <p className="leading-relaxed">
-                      • <strong>Wedding &amp; Reception:</strong> Already filled with <em>Kisan Bhawan, Sector 16, Faridabad</em> along with the Google Maps pin.
+                      • <strong>Wedding &amp; Reception:</strong> Already pre-filled with <em>Kisan Bhawan, Sector 16, Faridabad</em> along with the Google Maps pin.
                     </p>
                     <p className="leading-relaxed">
                       • <strong>Haldi &amp; Mehndi:</strong> You don&apos;t have to re-type addresses! Just click <span className="bg-white px-1.5 py-0.5 rounded border border-amber-300 font-medium">🏠 Same as Home Address</span> to automatically use your home address from Step 2, or <span className="bg-white px-1.5 py-0.5 rounded border border-amber-300 font-medium">🏛️ Same as Wedding Venue</span>, or enter another venue name if held elsewhere.
@@ -821,13 +940,14 @@ export default function QuestionnairePage() {
                   {/* Wedding & Reception Venue */}
                   <div className="venue-highlight-card">
                     <label className="field-label" htmlFor="wedding_reception_venue">
-                      💍 Wedding & Reception Venue *
+                      💍 Wedding & Reception Venue Address *
                     </label>
                     <textarea
                       id="wedding_reception_venue"
                       value={formData.wedding_reception_venue}
                       onChange={(e) => updateField("wedding_reception_venue", e.target.value)}
                       className="wedding-input wedding-textarea"
+                      required
                     />
                     <div className="mt-2 flex items-center justify-between text-xs">
                       <a
@@ -840,6 +960,9 @@ export default function QuestionnairePage() {
                       </a>
                       <span className="text-stone-500 font-serif italic">Sector 16, Faridabad</span>
                     </div>
+                    <p className="field-note text-amber-900 font-medium mt-1">
+                      ✦ Required: Strongly recommended to verify or specify the exact address details so guests receive precise location info.
+                    </p>
                   </div>
 
                   {/* Haldi Venue */}
@@ -933,13 +1056,18 @@ export default function QuestionnairePage() {
               </div>
             )}
 
-            {/* ── STEP 8: RSVP Contacts (Dynamic List) ── */}
+            {/* ── STEP 8: RSVP Contacts ── */}
             {currentStep === 8 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 7 • R.S.V.P.
-                  </span>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 7 • R.S.V.P.
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase rounded-full bg-rose-50 text-rose-800 border border-rose-300">
+                      ★ Must Fill
+                    </span>
+                  </div>
                   <h2 className="section-header mt-1">R.S.V.P. Contacts</h2>
                   <p className="section-subtitle">
                     Family members or event coordinators to contact for guest queries.
@@ -958,6 +1086,7 @@ export default function QuestionnairePage() {
                         value={contact}
                         onChange={(e) => handleRsvpChange(index, e.target.value)}
                         className="wedding-input flex-1"
+                        required={index === 0}
                       />
                       <button
                         type="button"
@@ -984,22 +1113,22 @@ export default function QuestionnairePage() {
               </div>
             )}
 
-            {/* ── STEP 9: "With Best Compliments From" (Dynamic List) ── */}
+            {/* ── STEP 9: Well-Wishers ── */}
             {currentStep === 9 && (
               <div>
                 <div className="mb-6">
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
                     <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
                       Section 8 • Well-Wishers
                     </span>
-                    <span className="text-[11px] uppercase tracking-wider text-stone-400 font-medium bg-stone-100/80 px-2 py-0.5 rounded-full">
-                      Optional
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-semibold tracking-wider uppercase rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300">
+                      ✓ Can Skip / Optional
                     </span>
                   </div>
                   <h2 className="section-header mt-1">
-                    With Best Compliments From <span className="text-sm font-normal text-stone-400 font-serif italic">(Optional)</span>
+                    With Best Compliments From
                   </h2>
-                  <p className="section-subtitle opacity-60 text-xs italic text-stone-500">
+                  <p className="section-subtitle text-xs italic text-stone-500">
                     Family groups, maternal uncles (Nanihal), cousins, and dear friends.
                   </p>
                 </div>
@@ -1039,20 +1168,25 @@ export default function QuestionnairePage() {
               </div>
             )}
 
-            {/* ── STEP 10: Review, Preview & Submit ── */}
+            {/* ── STEP 10: Review and Submit ── */}
             {currentStep === 10 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Final Step • Confirmation
-                  </span>
-                  <h2 className="section-header mt-1">Review Details &amp; Send to Bhai</h2>
+                  <div className="flex items-center justify-between gap-2 flex-wrap mb-1">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Final Step • Review
+                    </span>
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[11px] font-bold tracking-wider uppercase rounded-full bg-rose-50 text-rose-800 border border-rose-300">
+                      ★ Ready to Save
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">Review and Submit</h2>
                   <p className="section-subtitle">
-                    Please review all the details you entered below before sending them to Bhai.
+                    Please review all the details you entered below before saving.
                   </p>
                 </div>
 
-                {/* Live Card Simulation Preview Component */}
+                {/* Live Summary Preview Component */}
                 <div className="mb-8">
                   <LiveCardPreview
                     fatherPrefix={formData.father_prefix}
@@ -1226,14 +1360,14 @@ export default function QuestionnairePage() {
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
                         <span className="animate-spin text-lg">⏳</span>
-                        <span>Sending Details to Bhai...</span>
+                        <span>Saving Details...</span>
                       </span>
                     ) : (
-                      <span>💌 Send Details to Bhai ❤️</span>
+                      <span>Save Details</span>
                     )}
                   </button>
                   <p className="text-xs text-stone-500 font-serif italic mt-3">
-                    Your details will be immediately sent to Bhai for our family records.
+                    Your details will be securely saved to the database for our family records.
                   </p>
                 </div>
               </div>
@@ -1241,23 +1375,42 @@ export default function QuestionnairePage() {
 
             {/* ── Bottom Step Navigation Buttons ── */}
             {currentStep > 1 && currentStep < TOTAL_STEPS && (
-              <div className="flex items-center justify-between pt-8 mt-6 border-t border-amber-200/60">
-                <button
-                  type="button"
-                  onClick={goToPrevStep}
-                  className="btn-secondary"
-                >
-                  ← Back
-                </button>
+              <div className="pt-8 mt-6 border-t border-amber-200/60">
+                {/* Step Validation Error Message */}
+                {stepError && (
+                  <div className="mb-4 bg-rose-50 border border-rose-300 text-rose-800 px-4 py-3 rounded-xl text-xs flex items-center gap-2 font-medium fade-in shadow-xs">
+                    <span className="text-base">⚠️</span>
+                    <span>{stepError}</span>
+                  </div>
+                )}
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center justify-between">
                   <button
                     type="button"
-                    onClick={goToNextStep}
-                    className="btn-primary"
+                    onClick={goToPrevStep}
+                    className="btn-secondary"
                   >
-                    Next Step →
+                    ← Back
                   </button>
+
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    {STEP_CONFIGS[currentStep]?.isSkippable && (
+                      <button
+                        type="button"
+                        onClick={skipStep}
+                        className="btn-ghost !text-xs !py-2.5 !px-3.5 text-stone-500 hover:text-stone-700 border border-stone-200 hover:border-stone-400 rounded-xl"
+                      >
+                        Skip This Step ↷
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      onClick={goToNextStep}
+                      className="btn-primary"
+                    >
+                      Next Step →
+                    </button>
+                  </div>
                 </div>
               </div>
             )}
@@ -1269,7 +1422,7 @@ export default function QuestionnairePage() {
                   onClick={goToPrevStep}
                   className="btn-secondary"
                 >
-                  ← Back to Best Compliments
+                  ← Back to Well-Wishers
                 </button>
               </div>
             )}

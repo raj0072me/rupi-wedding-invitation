@@ -8,10 +8,25 @@ export default function MusicPlayer() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
+  const [isDimmed, setIsDimmed] = useState(false);
+  const [isTemporarilyActive, setIsTemporarilyActive] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const activeTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    // Check if form was already started in this session
+    if (sessionStorage.getItem("rupi_form_started") === "true") {
+      setIsDimmed(true);
+    }
+
+    const handleFormStarted = () => {
+      setIsDimmed(true);
+      sessionStorage.setItem("rupi_form_started", "true");
+    };
+
+    window.addEventListener("weddingFormStarted", handleFormStarted);
+
     // Show polite prompt after brief delay if not answered yet
     const timer = setTimeout(() => {
       const answered = sessionStorage.getItem("rupi_music_answered");
@@ -19,8 +34,24 @@ export default function MusicPlayer() {
         setShowPrompt(true);
       }
     }, 1000);
-    return () => clearTimeout(timer);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("weddingFormStarted", handleFormStarted);
+      if (activeTimerRef.current) clearTimeout(activeTimerRef.current);
+    };
   }, []);
+
+  const handleWidgetInteraction = () => {
+    // When user clicks the widget, make it 100% opacity for 3 seconds then return to 50%
+    setIsTemporarilyActive(true);
+    if (activeTimerRef.current) {
+      clearTimeout(activeTimerRef.current);
+    }
+    activeTimerRef.current = setTimeout(() => {
+      setIsTemporarilyActive(false);
+    }, 3000);
+  };
 
   if (!mounted) return null;
 
@@ -126,7 +157,14 @@ export default function MusicPlayer() {
       )}
 
       {/* Persistent Floating Music Controller Widget */}
-      <div className={`floating-music-widget ${collapsed ? "collapsed" : ""}`}>
+      <div
+        onClick={handleWidgetInteraction}
+        className={`floating-music-widget ${collapsed ? "collapsed" : ""} ${
+          isDimmed && !isTemporarilyActive
+            ? "!opacity-50 hover:!opacity-100"
+            : "!opacity-100"
+        } transition-opacity duration-500`}
+      >
         {collapsed ? (
           <button
             type="button"
