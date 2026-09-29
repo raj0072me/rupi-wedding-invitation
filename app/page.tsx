@@ -339,11 +339,7 @@ export default function QuestionnairePage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
-            <span className="text-[11px] font-semibold text-amber-800/80 bg-amber-50 px-2.5 py-1 rounded-full border border-amber-200">
-              For Bhai ❤️
-            </span>
-          </div>
+
         </div>
 
         {/* Dynamic Progress Bar */}

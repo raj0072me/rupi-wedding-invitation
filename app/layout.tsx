@@ -13,7 +13,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL("https://rupi-wedding-invitation.pages.dev"),
   title: "Rupi's Wedding Details Form ❤️",
-  description: "Wedding details form for Rupa (Rupi) — sharing ceremony dates, venues, and family details with Bhai.",
+  description: "Wedding details form for Rupa (Rupi) — sharing ceremony dates, venues, and family details.",
   keywords: ["Rupi Wedding", "Wedding Details", "Faridabad", "Kisan Bhawan"],
   icons: {
     icon: [
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Rupi's Wedding Details Form ❤️",
-    description: "Wedding details form for Rupa (Rupi) — sharing ceremony dates, venues, and family details with Bhai.",
+    description: "Wedding details form for Rupa (Rupi) — sharing ceremony dates, venues, and family details.",
     url: "https://rupi-wedding-invitation.pages.dev",
     siteName: "Rupi Wedding",
     images: [
