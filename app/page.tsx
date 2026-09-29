@@ -365,7 +365,7 @@ export default function QuestionnairePage() {
             <div className="flex items-center gap-2">
               <span className="text-base">✨</span>
               <span>
-                <strong>Wapas aa gayi, Rupi! 💛</strong> Teri pehli wali details phir se load ho gayi hain — jahan chhod gayi thi, wahan se shuru kar sakti hai.
+                <strong>Welcome, ₹upi! 💛</strong> Teri pehli wali details phir se load ho gayi hain — jahan chhod gayi thi, wahan se shuru kar sakti hai.
               </span>
             </div>
             <button
@@ -460,11 +460,11 @@ export default function QuestionnairePage() {
                 </div>
 
                 <h1 className="section-header text-2xl sm:text-3xl text-maroon mb-2">
-                  Hey Rupi! 💛
+                  Hey ₹upi! 💛
                 </h1>
 
                 <p className="text-xs sm:text-sm font-semibold text-amber-900 tracking-wide uppercase mb-3 font-display">
-                  Wedding Info Form — Teri shaadi, meri zimmedaari 😄
+                  Wedding Info Form 😄
                 </p>
 
                 <p className="section-subtitle max-w-lg mx-auto text-sm sm:text-base mb-6 leading-relaxed text-stone-700">
