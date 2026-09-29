@@ -11,9 +11,9 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://rupi-wedding-invitation.pages.dev"),
-  title: "₹upi Wedding Invitation Details ❤️",
-  description: "Wedding invitation card details questionnaire for Rupa (₹upi). Enter all family, dates, and venue information in one peaceful, royal space.",
-  keywords: ["Wedding Invitation", "Rupi Wedding", "Indian Wedding Details", "Kisan Bhawan Faridabad"],
+  title: "Rupi's Wedding Details Form ❤️",
+  description: "Wedding details form for Rupa (Rupi) — sharing ceremony dates, venues, and family details with Bhai.",
+  keywords: ["Rupi Wedding", "Wedding Details", "Faridabad", "Kisan Bhawan"],
   icons: {
     icon: [
       { url: "/favicon.png", type: "image/png" },
@@ -25,10 +25,10 @@ export const metadata: Metadata = {
     shortcut: "/favicon.png",
   },
   openGraph: {
-    title: "₹upi Wedding Invitation Details ❤️",
-    description: "Fill in the wedding invitation card details in one simple, beautiful place.",
+    title: "Rupi's Wedding Details Form ❤️",
+    description: "Wedding details form for Rupa (Rupi) — sharing ceremony dates, venues, and family details with Bhai.",
     url: "https://rupi-wedding-invitation.pages.dev",
-    siteName: "₹upi Wedding Invitation",
+    siteName: "Rupi Wedding",
     images: [
       {
         url: "/og-image.jpg",

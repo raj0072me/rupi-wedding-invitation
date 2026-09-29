@@ -95,7 +95,7 @@ Create a `.env` file in the root directory:
 DATABASE_URL="postgresql://username:password@ep-sample-pooler.region.aws.neon.tech/neondb?sslmode=require"
 
 # Admin Dashboard Passcode
-ADMIN_SECRET="9899654695"
+ADMIN_SECRET="your-admin-passcode"
 
 # Canonical URL
 NEXT_PUBLIC_BASE_URL="http://localhost:3000"
@@ -181,7 +181,7 @@ This project includes pre-configured [`netlify.toml`](file:///c:/Users/raj00/One
    - **Runtime plugin**: `@netlify/plugin-nextjs`
 3. In **Site Configuration** → **Environment Variables**, add:
    - `DATABASE_URL`: Your Neon PostgreSQL connection string
-   - `ADMIN_SECRET`: Your secret admin passcode (`9899654695`)
+   - `ADMIN_SECRET`: Your secret admin passcode
 4. **No badges/widgets**: Netlify drawer & preview badges are explicitly disabled via `DISABLE_NETLIFY_DRAWER = "true"`.
 
 ### Option B: Cloudflare Pages Deployment
@@ -192,7 +192,7 @@ This project includes pre-configured [`netlify.toml`](file:///c:/Users/raj00/One
    - Output directory: `.next`
 3. **Environment variables**:
    - `DATABASE_URL`: Your Neon PostgreSQL connection string
-   - `ADMIN_SECRET`: Your secret admin passcode (`9899654695`)
+   - `ADMIN_SECRET`: Your secret admin passcode
    - `NODE_VERSION`: `20` or `22`
 4. Click **Save and Deploy**. Live at `https://rupi-wedding-invitation.pages.dev`!
 

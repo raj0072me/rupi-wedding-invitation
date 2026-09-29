@@ -80,36 +80,6 @@ export default function LiveCardPreview({
   const cleanRsvps = rsvpList.filter((item) => item && item.trim());
   const cleanCompliments = complimentsList.filter((item) => item && item.trim());
 
-  const copyCardText = () => {
-    const fullText = `
-|| श्री गणेशाय नमः ||
-
-${grandfatherName || grandmotherName ? `With the Heavenly Blessings of:\n${grandfatherName ? `${grandfatherName}\n` : ''}${grandmotherName ? `${grandmotherName}\n` : ''}\n` : ''}
-${displayFather} & ${displayMother}
-solicit your gracious presence and divine blessings on the auspicious occasion of the wedding ceremony of their beloved daughter
-
-${displayBride} ${brideInitials ? `(${brideInitials})` : ''}
-weds
-${displayGroom}
-Son of ${groomMotherName ? `${groomMotherPrefix} ${groomMotherName}` : "Smt. Groom's Mother"} & ${groomFatherName ? `${groomFatherPrefix} ${groomFatherName}` : "Sh. Groom's Father"}
-
-── AUSPICIOUS PROGRAMME ──
-${haldiDate ? `🌼 Haldi Ceremony: ${formatDate(haldiDate)} | Venue: ${haldiVenue || 'Family Residence'}\n` : ''}${mehndiDate ? `🌿 Mehndi Ceremony: ${formatDate(mehndiDate)} | Venue: ${mehndiVenue || 'Family Residence'}\n` : ''}
-💍 Wedding & Reception Ceremony:
-Date: ${formatDate(weddingDate)}
-Venue: ${weddingVenue || 'Kisan Bhawan, Sector 16, Faridabad, Haryana 121002'}
-
-${cleanRsvps.length > 0 ? `R.S.V.P.:\n${cleanRsvps.join('\n')}\n` : ''}
-${cleanCompliments.length > 0 ? `With Best Compliments From:\n${cleanCompliments.join(', ')}\n` : ''}
-Residence:
-${familyAddress || 'Faridabad, Haryana'}
-Contact: ${mobile1} ${mobile2 ? `| ${mobile2}` : ''}
-    `.trim();
-
-    navigator.clipboard.writeText(fullText);
-    alert("Card text copied to clipboard! Ready to share with your family or printing vendor. ✨");
-  };
-
   return (
     <div className="live-card-container">
       {/* Action Header */}
@@ -117,33 +87,23 @@ Contact: ${mobile1} ${mobile2 ? `| ${mobile2}` : ''}
         <div className="flex items-center gap-2">
           <span className="text-xl">📜</span>
           <div>
-            <h4 className="font-display font-bold text-maroon text-base">Royal Invitation Card Preview</h4>
+            <h4 className="font-display font-bold text-maroon text-base">Summary Card Preview</h4>
             <p className="text-xs text-stone-500 font-serif italic">
-              Live simulation of your printed wedding card
+              Preview of how your shared details come together
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        {onClose && (
           <button
             type="button"
-            onClick={copyCardText}
-            className="btn-ghost !text-xs !py-1.5 !px-3 font-medium flex items-center gap-1.5"
-            title="Copy full invitation wording to clipboard"
+            onClick={onClose}
+            className="royal-date-close-btn"
+            aria-label="Close Preview"
           >
-            📋 Copy Card Wording
+            ✕
           </button>
-          {onClose && (
-            <button
-              type="button"
-              onClick={onClose}
-              className="royal-date-close-btn"
-              aria-label="Close Preview"
-            >
-              ✕
-            </button>
-          )}
-        </div>
+        )}
       </div>
 
       {/* Realistic Physical Wedding Card */}

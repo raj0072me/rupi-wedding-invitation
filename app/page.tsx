@@ -267,29 +267,18 @@ export default function QuestionnairePage() {
             </div>
             <div>
               <div className="flex items-center gap-1.5">
-                <span className="font-display text-sm font-bold text-maroon tracking-wider">
-                  ₹UPI WEDDING
+                <span className="font-playfair text-base sm:text-lg font-bold text-maroon tracking-wide">
+                  Rupi&apos;s Wedding
                 </span>
-                <span className="text-xs text-amber-600 font-serif">❤️</span>
+                <span className="text-sm">❤️</span>
               </div>
-              <span className="text-[11px] text-stone-500 font-serif italic hidden sm:inline">
-                Royal Invitation Details
+              <span className="text-[11px] text-amber-900/70 font-sans tracking-wide uppercase font-semibold hidden sm:inline">
+                Information Form
               </span>
             </div>
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
-            {/* Quick Live Preview Button */}
-            <button
-              type="button"
-              onClick={() => setShowLivePreviewModal(true)}
-              className="btn-ghost !text-xs !py-1.5 !px-3 flex items-center gap-1.5"
-              title="Preview physical wedding card"
-            >
-              <span>📜</span>
-              <span className="hidden sm:inline">Card Preview</span>
-            </button>
-
             {/* Admin Portal Link */}
             <Link
               href="/admin"
@@ -350,7 +339,7 @@ export default function QuestionnairePage() {
           </span>
         </div>
 
-        {/* ─── Submission Success Celebration View ─── */}
+        {/* ─── Submission Success View ─── */}
         {submissionSuccess ? (
           <div className="wedding-card text-center py-10 px-6 fade-in">
             <div className="w-20 h-20 mx-auto rounded-full bg-amber-50 border-2 border-amber-400 flex items-center justify-center text-3xl mb-4 shadow-lg pulse-gold">
@@ -358,10 +347,10 @@ export default function QuestionnairePage() {
             </div>
 
             <h2 className="section-header text-2xl sm:text-3xl text-maroon mb-2">
-              Badhaai Ho, ₹upi! ❤️
+              Thank You, Rupi! ❤️
             </h2>
             <p className="section-subtitle max-w-md mx-auto mb-6 text-base">
-              Your wedding invitation details have been safely received and stored. Our team will now craft your exquisite wedding cards with love and precision.
+              Your wedding details have been safely received by Bhai. Everything has been noted down!
             </p>
 
             <div className="bg-amber-50/80 border border-amber-300 rounded-xl p-4 max-w-sm mx-auto mb-8 text-left text-xs space-y-1.5">
@@ -381,14 +370,7 @@ export default function QuestionnairePage() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={() => setShowLivePreviewModal(true)}
-                className="btn-primary"
-              >
-                📜 View Printed Card Simulation
-              </button>
+            <div className="flex justify-center">
               <button
                 type="button"
                 onClick={() => {
@@ -398,21 +380,21 @@ export default function QuestionnairePage() {
                 }}
                 className="btn-secondary"
               >
-                Start Another Form
+                Submit New Entry
               </button>
             </div>
           </div>
         ) : (
           /* ─── 10-Step Wizard ─── */
           <div className="wedding-card fade-in">
-            {/* ── STEP 1: Royal Welcome ── */}
+            {/* ── STEP 1: Welcome ── */}
             {currentStep === 1 && (
               <div className="text-center py-4">
                 <div className="flex justify-center mb-4">
                   <div className="royal-crest-wrapper pulse-gold">
                     <Image
                       src="/rupi.png"
-                      alt="₹upi Crest"
+                      alt="Rupi"
                       width={88}
                       height={88}
                       className="rounded-full object-cover"
@@ -426,11 +408,11 @@ export default function QuestionnairePage() {
                 </div>
 
                 <h1 className="section-header text-2xl sm:text-3xl text-maroon mb-3">
-                  Dear ₹upi ❤️
+                  Dear Rupi ❤️
                 </h1>
 
                 <p className="section-subtitle max-w-lg mx-auto text-base sm:text-lg mb-8 leading-relaxed">
-                  Welcome to your sacred wedding invitation details portal. To save you from countless WhatsApp messages and phone calls, fill in your details here at your own peaceful pace.
+                  To keep all your wedding details organized in one easy place without repeated messages and calls, please fill in your details here at your own comfortable pace.
                 </p>
 
                 <button
@@ -439,7 +421,7 @@ export default function QuestionnairePage() {
                   onClick={goToNextStep}
                   className="btn-primary text-base !py-3.5 !px-8"
                 >
-                  Begin Questionnaire ✨
+                  Start Form ✨
                 </button>
               </div>
             )}
@@ -647,7 +629,7 @@ export default function QuestionnairePage() {
                       className="wedding-input font-display font-semibold text-lg"
                       required
                     />
-                    <p className="field-note">✦ As you wish it to appear prominently on the invitation card.</p>
+                    <p className="field-note">✦ Your lovely full name for our family records ❤️</p>
                   </div>
 
                   <div>
@@ -663,7 +645,7 @@ export default function QuestionnairePage() {
                       className="wedding-input"
                     />
                     <p className="field-note">
-                      ✦ Optional pet name printed beside the formal name.
+                      ✦ If you want to add your nickname or initials (like ₹upi or R&amp;A)
                     </p>
                   </div>
                 </div>
@@ -814,12 +796,25 @@ export default function QuestionnairePage() {
               <div>
                 <div className="mb-6">
                   <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 6 • Venues
+                    Section 6 • Venues &amp; Locations
                   </span>
-                  <h2 className="section-header mt-1">Venues & Locations</h2>
+                  <h2 className="section-header mt-1">Ceremony Venues &amp; Locations</h2>
                   <p className="section-subtitle">
-                    Specify where each sacred celebration will take place.
+                    Tell us where each wedding ceremony will take place.
                   </p>
+
+                  <div className="mt-3.5 bg-amber-50/80 border border-amber-300/80 rounded-xl p-3.5 text-xs text-amber-950 space-y-1.5">
+                    <p className="font-semibold text-maroon flex items-center gap-1.5">
+                      <span>💡</span>
+                      <span>How this works:</span>
+                    </p>
+                    <p className="leading-relaxed">
+                      • <strong>Wedding &amp; Reception:</strong> Already filled with <em>Kisan Bhawan, Sector 16, Faridabad</em> along with the Google Maps pin.
+                    </p>
+                    <p className="leading-relaxed">
+                      • <strong>Haldi &amp; Mehndi:</strong> You don&apos;t have to re-type addresses! Just click <span className="bg-white px-1.5 py-0.5 rounded border border-amber-300 font-medium">🏠 Same as Home Address</span> to automatically use your home address from Step 2, or <span className="bg-white px-1.5 py-0.5 rounded border border-amber-300 font-medium">🏛️ Same as Wedding Venue</span>, or enter another venue name if held elsewhere.
+                    </p>
+                  </div>
                 </div>
 
                 <div className="space-y-6">
@@ -1051,9 +1046,9 @@ export default function QuestionnairePage() {
                   <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
                     Final Step • Confirmation
                   </span>
-                  <h2 className="section-header mt-1">Review & Submit</h2>
+                  <h2 className="section-header mt-1">Review Details &amp; Send to Bhai</h2>
                   <p className="section-subtitle">
-                    Review your invitation details below or tap any section to make quick edits.
+                    Please review all the details you entered below before sending them to Bhai.
                   </p>
                 </div>
 
@@ -1231,14 +1226,14 @@ export default function QuestionnairePage() {
                     {isSubmitting ? (
                       <span className="flex items-center gap-2">
                         <span className="animate-spin text-lg">⏳</span>
-                        <span>Safely Submitting Details...</span>
+                        <span>Sending Details to Bhai...</span>
                       </span>
                     ) : (
-                      <span>👑 Submit Wedding Invitation Details</span>
+                      <span>💌 Send Details to Bhai ❤️</span>
                     )}
                   </button>
                   <p className="text-xs text-stone-500 font-serif italic mt-3">
-                    Your details will be immediately preserved in the family database.
+                    Your details will be immediately sent to Bhai for our family records.
                   </p>
                 </div>
               </div>

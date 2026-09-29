@@ -38,7 +38,7 @@ DATABASE_URL="postgresql://username:password@ep-sample-pooler.region.aws.neon.te
 # ==============================================================================
 # Secret passcode or alphanumeric key used to authorize access to the /admin 
 # view and API endpoints. Can be a 32-byte hex string or secure personal PIN.
-ADMIN_SECRET="9899654695"
+ADMIN_SECRET="your-admin-passcode"
 
 # ==============================================================================
 # Application URL & SEO Metadata

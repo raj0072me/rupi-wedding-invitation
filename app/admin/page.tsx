@@ -13,15 +13,6 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedSubmission, setSelectedSubmission] = useState<WeddingSubmission | null>(null);
 
-  // Check sessionStorage for saved passcode on mount
-  useEffect(() => {
-    const savedSecret = sessionStorage.getItem("rupi_admin_secret");
-    if (savedSecret) {
-      setSecret(savedSecret);
-      fetchSubmissions(savedSecret);
-    }
-  }, []);
-
   const fetchSubmissions = useCallback(async (token: string) => {
     setIsLoading(true);
     setPasscodeError("");
@@ -45,7 +36,7 @@ export default function AdminPage() {
         setSubmissions(data.submissions);
         setIsAuthenticated(true);
         sessionStorage.setItem("rupi_admin_secret", token);
-        if (data.submissions.length > 0 && !selectedSubmission) {
+        if (data.submissions.length > 0) {
           setSelectedSubmission(data.submissions[0]);
         }
       }
@@ -54,7 +45,16 @@ export default function AdminPage() {
     } finally {
       setIsLoading(false);
     }
-  }, [selectedSubmission]);
+  }, []);
+
+  // Check sessionStorage for saved passcode on mount
+  useEffect(() => {
+    const savedSecret = sessionStorage.getItem("rupi_admin_secret");
+    if (savedSecret) {
+      setSecret(savedSecret);
+      fetchSubmissions(savedSecret);
+    }
+  }, [fetchSubmissions]);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -84,109 +84,15 @@ export default function AdminPage() {
         headers: { "x-admin-secret": secret },
       });
       if (res.ok) {
-        setSubmissions((prev) => prev.filter((s) => s.id !== id));
+        const remaining = submissions.filter((s) => s.id !== id);
+        setSubmissions(remaining);
         if (selectedSubmission?.id === id) {
-          setSelectedSubmission(null);
+          setSelectedSubmission(remaining.length > 0 ? remaining[0] : null);
         }
-        alert(`Submission #${id} deleted successfully.`);
       }
     } catch {
-      alert("Failed to delete submission.");
+      alert("Failed to delete entry.");
     }
-  };
-
-  // Copy helper for Card Designer / Printing Press
-  const copyFormattedForDesigner = (sub: WeddingSubmission) => {
-    const rsvpList = Array.isArray(sub.rsvp_names)
-      ? sub.rsvp_names.map((r: string | { name: string; contact?: string }) => typeof r === "string" ? r : `${r.name} (${r.contact || ''})`).filter(Boolean)
-      : [];
-    const complimentsList = Array.isArray(sub.best_compliments)
-      ? sub.best_compliments.filter(Boolean)
-      : [];
-
-    const text = `
-======================================================
-  ROYAL WEDDING INVITATION CARD TEXT FOR PRINTING
-======================================================
-|| श्री गणेशाय नमः ||
-
-${sub.grandfather_name || sub.grandmother_name ? `With the Heavenly Blessings of:\n${sub.grandfather_name ? `• ${sub.grandfather_name}\n` : ''}${sub.grandmother_name ? `• ${sub.grandmother_name}\n` : ''}\n` : ''}
-${sub.father_prefix} ${sub.father_name} & ${sub.mother_prefix} ${sub.mother_name}
-solicit your gracious presence and divine blessings on the auspicious occasion of the wedding ceremony of their beloved daughter
-
-${sub.bride_name} ${sub.bride_initials ? `(${sub.bride_initials})` : ''}
-weds
-${sub.groom_name}
-Son of ${sub.groom_mother_name ? `${sub.groom_mother_prefix} ${sub.groom_mother_name}` : 'Smt. Groom Mother'} & ${sub.groom_father_name ? `${sub.groom_father_prefix} ${sub.groom_father_name}` : 'Sh. Groom Father'}
-
---- AUSPICIOUS CEREMONIES ---
-${sub.haldi_date ? `• Haldi Ceremony: ${sub.haldi_date} | Venue: ${sub.haldi_venue || 'Residence'}\n` : ''}${sub.mehndi_date ? `• Mehndi Ceremony: ${sub.mehndi_date} | Venue: ${sub.mehndi_venue || 'Residence'}\n` : ''}• Wedding & Reception:
-  Date: ${sub.wedding_date || 'TBD'}
-  Venue: ${sub.wedding_reception_venue || 'Kisan Bhawan, Sector 16, Faridabad'}
-
-${rsvpList.length > 0 ? `R.S.V.P.:\n${rsvpList.map(r => `  • ${r}`).join('\n')}\n` : ''}
-${complimentsList.length > 0 ? `With Best Compliments From:\n  ${complimentsList.join(', ')}\n` : ''}
-Residence:
-  ${sub.family_address || 'Faridabad, Haryana'}
-  Contact: ${sub.mobile_1} ${sub.mobile_2 ? `| ${sub.mobile_2}` : ''}
-
-${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
-======================================================
-    `.trim();
-
-    navigator.clipboard.writeText(text);
-    alert("Full formatted invitation card text copied! Ready to paste to printing vendor / WhatsApp. ✨");
-  };
-
-  // Export to CSV
-  const downloadCsv = () => {
-    if (submissions.length === 0) {
-      alert("No submissions to export.");
-      return;
-    }
-
-    const headers = [
-      "ID", "Submitted At", "Bride Name", "Groom Name",
-      "Father Name", "Mother Name", "Family Address", "Mobile 1", "Mobile 2",
-      "Wedding Date", "Haldi Date", "Mehndi Date", "Reception Venue", "Notes"
-    ];
-
-    const rows = submissions.map((s) => [
-      s.id,
-      s.created_at,
-      `"${s.bride_name}"`,
-      `"${s.groom_name}"`,
-      `"${s.father_prefix} ${s.father_name}"`,
-      `"${s.mother_prefix} ${s.mother_name}"`,
-      `"${(s.family_address || "").replace(/"/g, '""')}"`,
-      `"${s.mobile_1}"`,
-      `"${s.mobile_2}"`,
-      `"${s.wedding_date || ""}"`,
-      `"${s.haldi_date || ""}"`,
-      `"${s.mehndi_date || ""}"`,
-      `"${(s.wedding_reception_venue || "").replace(/"/g, '""')}"`,
-      `"${(s.additional_notes || "").replace(/"/g, '""')}"`,
-    ]);
-
-    const csvContent = "data:text/csv;charset=utf-8," + [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `rupi_wedding_submissions_${new Date().toISOString().split("T")[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  };
-
-  // Export to JSON
-  const downloadJson = () => {
-    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(submissions, null, 2));
-    const downloadAnchor = document.createElement("a");
-    downloadAnchor.setAttribute("href", dataStr);
-    downloadAnchor.setAttribute("download", `rupi_wedding_submissions_${new Date().toISOString().split("T")[0]}.json`);
-    document.body.appendChild(downloadAnchor);
-    downloadAnchor.click();
-    downloadAnchor.remove();
   };
 
   return (
@@ -199,18 +105,18 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
               <div className="w-8 h-8 rounded-full border border-amber-400 p-0.5 bg-white shadow-sm flex-shrink-0">
                 <Image
                   src="/rupi.png"
-                  alt="₹upi Monogram"
+                  alt="Rupi"
                   width={30}
                   height={30}
                   className="rounded-full object-cover"
                 />
               </div>
-              <span className="font-display text-sm font-bold text-maroon tracking-wider">
-                ADMIN PORTAL
+              <span className="font-playfair text-base font-bold text-maroon tracking-wide">
+                Admin Portal
               </span>
             </Link>
             <span className="text-xs bg-amber-100 text-amber-900 px-2 py-0.5 rounded-full font-semibold border border-amber-300">
-              Wedding Submissions
+              Sister&apos;s Wedding Info
             </span>
           </div>
 
@@ -219,7 +125,7 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
               href="/"
               className="text-xs font-semibold text-stone-600 hover:text-maroon px-2 py-1"
             >
-              ← Back to Questionnaire
+              ← Back to Form
             </Link>
             {isAuthenticated && (
               <button
@@ -246,14 +152,14 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
               Admin Access
             </h2>
             <p className="text-xs text-stone-600 font-serif italic mb-6">
-              Enter your secure admin passcode to view family invitation submissions.
+              Enter your admin passcode to view the wedding details submitted by Rupi.
             </p>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
                 <input
                   type="password"
-                  placeholder="Enter Admin Secret Passcode"
+                  placeholder="Enter Admin Passcode"
                   value={secret}
                   onChange={(e) => setSecret(e.target.value)}
                   className="wedding-input text-center tracking-widest font-mono text-base"
@@ -270,45 +176,29 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                 disabled={isLoading}
                 className="btn-primary w-full"
               >
-                {isLoading ? "Verifying..." : "Unlock Dashboard 🔓"}
+                {isLoading ? "Verifying..." : "View Wedding Details 🔓"}
               </button>
             </form>
           </div>
         ) : (
           /* ─── Authenticated Dashboard View ─── */
           <div className="fade-in space-y-6">
-            {/* Top Metrics & Actions Bar */}
-            <div className="bg-white border border-amber-300/80 rounded-2xl p-4 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            {/* Top Metrics Bar */}
+            <div className="bg-white border border-amber-300/80 rounded-2xl p-4 sm:p-6 shadow-sm flex items-center justify-between">
               <div>
-                <h1 className="font-display font-bold text-xl text-maroon">
-                  ₹upi Wedding Submissions Overview
+                <h1 className="font-playfair font-bold text-xl text-maroon">
+                  Wedding Details Received
                 </h1>
                 <p className="text-xs text-stone-500 font-serif italic mt-0.5">
-                  Total Entries Received: <strong>{submissions.length}</strong>
+                  Total Submissions: <strong>{submissions.length}</strong>
                 </p>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={downloadCsv}
-                  className="btn-ghost !text-xs !py-1.5 !px-3 font-semibold flex items-center gap-1.5"
-                  title="Export spreadsheet for printing vendor"
-                >
-                  📊 Download CSV
-                </button>
-                <button
-                  type="button"
-                  onClick={downloadJson}
-                  className="btn-ghost !text-xs !py-1.5 !px-3 font-semibold flex items-center gap-1.5"
-                  title="Export raw JSON"
-                >
-                  💾 Download JSON
-                </button>
+              <div>
                 <button
                   type="button"
                   onClick={() => fetchSubmissions(secret)}
-                  className="btn-ghost !text-xs !py-1.5 !px-3"
+                  className="btn-ghost !text-xs !py-1.5 !px-3 font-semibold"
                   title="Refresh list"
                 >
                   🔄 Refresh
@@ -320,7 +210,7 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
             {submissions.length === 0 ? (
               <div className="wedding-card text-center py-12">
                 <p className="text-stone-500 font-serif italic text-base">
-                  No submissions recorded yet. Once ₹upi submits her questionnaire, it will appear here.
+                  No submissions received yet. Once Rupi submits the form, it will appear here.
                 </p>
               </div>
             ) : (
@@ -328,7 +218,7 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                 {/* Left List of Submissions */}
                 <div className="lg:col-span-1 space-y-3">
                   <h3 className="text-xs font-bold uppercase tracking-wider text-stone-500 px-1">
-                    All Submissions ({submissions.length})
+                    Submissions ({submissions.length})
                   </h3>
 
                   {submissions.map((sub) => {
@@ -353,7 +243,7 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                       >
                         <div className="flex items-center justify-between mb-1">
                           <span className="font-mono text-xs font-bold text-maroon">
-                            #{sub.id}
+                            Entry #{sub.id}
                           </span>
                           <span className="text-[11px] text-stone-500">
                             {dateFormatted}
@@ -377,42 +267,34 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                   {selectedSubmission ? (
                     <div className="wedding-card !p-6 space-y-6">
                       {/* Card Header */}
-                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-amber-200/60 pb-4">
+                      <div className="flex items-center justify-between border-b border-amber-200/60 pb-4">
                         <div>
                           <div className="flex items-center gap-2">
                             <span className="font-mono font-bold text-maroon text-sm">
-                              Submission #{selectedSubmission.id}
+                              Entry #{selectedSubmission.id}
                             </span>
                             <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-semibold">
                               Saved to Database
                             </span>
                           </div>
                           <div className="text-xs text-stone-500 mt-1">
-                            Recorded: {new Date(selectedSubmission.created_at).toLocaleString("en-IN")}
+                            Submitted: {new Date(selectedSubmission.created_at).toLocaleString("en-IN")}
                           </div>
                         </div>
 
-                        <div className="flex items-center gap-2">
-                          <button
-                            type="button"
-                            onClick={() => copyFormattedForDesigner(selectedSubmission)}
-                            className="btn-primary !text-xs !py-2 !px-4"
-                            title="Copy full worded card for printing"
-                          >
-                            📋 Copy Card Wording
-                          </button>
+                        <div>
                           <button
                             type="button"
                             onClick={() => handleDelete(selectedSubmission.id)}
                             className="btn-remove"
-                            title="Delete submission"
+                            title="Delete this entry"
                           >
                             🗑️
                           </button>
                         </div>
                       </div>
 
-                      {/* Detail Sections Grid */}
+                      {/* Detail Sections */}
                       <div className="space-y-4 text-sm">
                         {/* 1. Couple */}
                         <div className="bg-amber-50/50 p-4 rounded-xl border border-amber-200">
@@ -432,7 +314,7 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                                 {selectedSubmission.groom_name}
                               </span>
                             </div>
-                            <div>
+                            <div className="sm:col-span-2">
                               <span className="text-stone-500 block">Groom&apos;s Parents:</span>
                               <span className="text-stone-800">
                                 {selectedSubmission.groom_mother_name ? `${selectedSubmission.groom_mother_prefix} ${selectedSubmission.groom_mother_name}` : "—"} &amp;{" "}
@@ -454,11 +336,19 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                                 {selectedSubmission.father_prefix} {selectedSubmission.father_name} &amp; {selectedSubmission.mother_prefix} {selectedSubmission.mother_name}
                               </strong>
                             </div>
+                            {(selectedSubmission.grandfather_name || selectedSubmission.grandmother_name) && (
+                              <div>
+                                <span className="text-stone-500">Grandparents:</span>{" "}
+                                <span className="text-stone-800">
+                                  {selectedSubmission.grandfather_name} {selectedSubmission.grandfather_name && selectedSubmission.grandmother_name ? "& " : ""}{selectedSubmission.grandmother_name}
+                                </span>
+                              </div>
+                            )}
                             <div>
                               <span className="text-stone-500">Residence Address:</span>{" "}
                               <span className="text-stone-800">{selectedSubmission.family_address || "—"}</span>
                             </div>
-                            <div className="flex items-center gap-4 pt-1">
+                            <div className="flex flex-wrap items-center gap-4 pt-1">
                               {selectedSubmission.mobile_1 && (
                                 <a
                                   href={`tel:${selectedSubmission.mobile_1}`}
@@ -501,7 +391,7 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                                   rel="noopener noreferrer"
                                   className="text-amber-800 underline ml-2 font-medium"
                                 >
-                                  [View Map Pin]
+                                  [Open Maps Pin]
                                 </a>
                               )}
                             </div>
@@ -524,11 +414,34 @@ ${sub.additional_notes ? `Special Notes:\n  ${sub.additional_notes}\n` : ''}
                           </div>
                         </div>
 
-                        {/* 4. Additional Notes */}
+                        {/* 4. RSVP & Compliments */}
+                        <div className="bg-white p-4 rounded-xl border border-amber-200 text-xs space-y-2">
+                          {Array.isArray(selectedSubmission.rsvp_names) && selectedSubmission.rsvp_names.length > 0 && (
+                            <div>
+                              <span className="font-bold text-maroon block mb-1">R.S.V.P.:</span>
+                              <ul className="list-disc list-inside text-stone-700">
+                                {selectedSubmission.rsvp_names.map((name, i) => (
+                                  <li key={i}>{typeof name === "string" ? name : name.name}</li>
+                                ))}
+                              </ul>
+                            </div>
+                          )}
+
+                          {Array.isArray(selectedSubmission.best_compliments) && selectedSubmission.best_compliments.length > 0 && (
+                            <div>
+                              <span className="font-bold text-maroon block mb-1">With Best Compliments:</span>
+                              <p className="text-stone-700">
+                                {selectedSubmission.best_compliments.join(", ")}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* 5. Additional Notes */}
                         {selectedSubmission.additional_notes && (
                           <div className="bg-amber-50/70 p-4 rounded-xl border border-amber-300 text-xs">
                             <span className="font-bold text-maroon block mb-1">
-                              Special Instructions / Notes:
+                              Special Notes from Rupi:
                             </span>
                             <p className="text-stone-700 whitespace-pre-wrap">
                               {selectedSubmission.additional_notes}
