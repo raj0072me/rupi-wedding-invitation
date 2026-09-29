@@ -81,6 +81,16 @@ const STEP_TITLES = [
   "Review & Submit",
 ];
 
+function formatMobileNumber(val: string): string {
+  // Strip all non-digit characters, limit to 10 digits
+  const digits = val.replace(/\D/g, "").slice(0, 10);
+  // Auto add space after 5 digits (XXXXX XXXXX)
+  if (digits.length > 5) {
+    return `${digits.slice(0, 5)} ${digits.slice(5)}`;
+  }
+  return digits;
+}
+
 export default function QuestionnairePage() {
   const [currentStep, setCurrentStep] = useState(1);
   const [formData, setFormData] = useState<FormData>(DEFAULT_FORM);
@@ -102,7 +112,9 @@ export default function QuestionnairePage() {
           setFormData((prev) => ({
             ...prev,
             ...parsed,
-            // ensure arrays are intact
+            // ensure arrays and formatted numbers are intact
+            mobile_1: parsed.mobile_1 ? formatMobileNumber(parsed.mobile_1) : prev.mobile_1,
+            mobile_2: parsed.mobile_2 ? formatMobileNumber(parsed.mobile_2) : prev.mobile_2,
             rsvp_names: parsed.rsvp_names?.length ? parsed.rsvp_names : prev.rsvp_names,
             best_compliments: parsed.best_compliments?.length ? parsed.best_compliments : prev.best_compliments,
           }));
@@ -417,24 +429,9 @@ export default function QuestionnairePage() {
                   Dear ₹upi ❤️
                 </h1>
 
-                <p className="section-subtitle max-w-lg mx-auto text-base sm:text-lg mb-6 leading-relaxed">
+                <p className="section-subtitle max-w-lg mx-auto text-base sm:text-lg mb-8 leading-relaxed">
                   Welcome to your sacred wedding invitation details portal. To save you from countless WhatsApp messages and phone calls, fill in your details here at your own peaceful pace.
                 </p>
-
-                <div className="bg-gradient-to-r from-amber-500/10 via-amber-500/20 to-amber-500/10 border border-amber-300/60 rounded-xl p-4 max-w-md mx-auto mb-8 text-xs text-amber-950 text-left space-y-2">
-                  <div className="flex items-start gap-2.5">
-                    <span className="text-base">✨</span>
-                    <span><strong>Zero Data Loss:</strong> Every letter you type is saved automatically on this device. You can close your browser anytime.</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <span className="text-base">📜</span>
-                    <span><strong>Live Card Preview:</strong> See your details rendered in real-time onto an authentic royal Indian wedding invitation card.</span>
-                  </div>
-                  <div className="flex items-start gap-2.5">
-                    <span className="text-base">🎵</span>
-                    <span><strong>Ambient Music:</strong> Enjoy soothing acoustic music while you fill out your questionnaire.</span>
-                  </div>
-                </div>
 
                 <button
                   id="btn-begin-questionnaire"
@@ -544,11 +541,15 @@ export default function QuestionnairePage() {
                       <input
                         id="mobile_1"
                         type="tel"
-                        placeholder="e.g. 98996 54695"
+                        inputMode="numeric"
+                        pattern="[0-9 ]*"
+                        maxLength={11}
+                        placeholder="98996 54695"
                         value={formData.mobile_1}
-                        onChange={(e) => updateField("mobile_1", e.target.value)}
-                        className="wedding-input"
+                        onChange={(e) => updateField("mobile_1", formatMobileNumber(e.target.value))}
+                        className="wedding-input tracking-wider font-mono text-base"
                       />
+                      <p className="field-note">✦ 10 digits (e.g. 98996 54695)</p>
                     </div>
                     <div>
                       <label className="field-label" htmlFor="mobile_2">
@@ -557,11 +558,15 @@ export default function QuestionnairePage() {
                       <input
                         id="mobile_2"
                         type="tel"
-                        placeholder="e.g. 98111 22334"
+                        inputMode="numeric"
+                        pattern="[0-9 ]*"
+                        maxLength={11}
+                        placeholder="98111 22334"
                         value={formData.mobile_2}
-                        onChange={(e) => updateField("mobile_2", e.target.value)}
-                        className="wedding-input"
+                        onChange={(e) => updateField("mobile_2", formatMobileNumber(e.target.value))}
+                        className="wedding-input tracking-wider font-mono text-base"
                       />
+                      <p className="field-note">✦ Optional secondary mobile number</p>
                     </div>
                   </div>
                 </div>
