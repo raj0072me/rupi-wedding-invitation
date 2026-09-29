@@ -442,21 +442,23 @@ export default function QuestionnairePage() {
             {/* ── STEP 1: Welcome ── */}
             {currentStep === 1 && (
               <div className="text-center py-6 px-2 sm:px-4">
-                <div className="flex justify-center mb-4">
-                  <div className="royal-crest-wrapper pulse-gold">
-                    <Image
-                      src="/rupi.png"
-                      alt="Rupi"
-                      width={88}
-                      height={88}
-                      className="rounded-full object-cover"
-                      priority
-                    />
-                  </div>
+                <div className="text-amber-800 font-serif italic text-sm mb-3 tracking-wide">
+                  ॥ श्री गणेशाय नमः ॥
                 </div>
 
-                <div className="text-amber-800 font-serif italic text-sm mb-1">
-                  ॥ श्री गणेशाय नमः ॥
+                <div className="flex justify-center mb-5">
+                  <div className="couple-portrait-wrapper">
+                    <div className="couple-portrait-inner">
+                      <Image
+                        src="/bride_groom.png"
+                        alt="Bride & Groom"
+                        width={600}
+                        height={600}
+                        className="w-full h-full object-cover"
+                        priority
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <h1 className="section-header text-2xl sm:text-3xl text-maroon mb-2">
