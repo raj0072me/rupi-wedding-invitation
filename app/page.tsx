@@ -369,7 +369,7 @@ export default function QuestionnairePage() {
             <div className="flex items-center gap-2">
               <span className="text-base">✨</span>
               <span>
-                <strong>Arre wapas aa gayi, Rupi! 🎉</strong> Pehle fill kiya hua data phir se load ho gaya hai — koi baat nahi, kahan se ruk gayi thi wahan se shuru karo!
+                <strong>Wapas aa gayi, Rupi! 💛</strong> Teri pehli wali details phir se load ho gayi hain — jahan chhod gayi thi, wahan se shuru kar sakti hai.
               </span>
             </div>
             <button
@@ -403,10 +403,10 @@ export default function QuestionnairePage() {
             </div>
 
             <h2 className="section-header text-2xl sm:text-3xl text-maroon mb-2">
-              Shukriya, Rupi! ❤️ Bahut Bahut!
+              Shukriya Rupi! ❤️
             </h2>
             <p className="section-subtitle max-w-md mx-auto mb-6 text-base">
-              Bhai ke paas sab details pahunch gayi hain! Bahut achha kiya yaar, ekdum perfect. Ab Bhai handle kar lega 💪
+              Teri details mil gayi mujhe — bahut achha kiya jo time nikala. Ab main sab handle kar lunga, tu bas apni shaadi enjoy kar! 💪
             </p>
 
             <div className="bg-amber-50/80 border border-amber-300 rounded-xl p-4 max-w-sm mx-auto mb-8 text-left text-xs space-y-1.5">
@@ -464,29 +464,29 @@ export default function QuestionnairePage() {
                 </div>
 
                 <h1 className="section-header text-2xl sm:text-3xl text-maroon mb-2">
-                  Hey Rupi! 💛 Bhai ki taraf se...
+                  Hey Rupi! 💛
                 </h1>
 
                 <p className="text-xs sm:text-sm font-semibold text-amber-900 tracking-wide uppercase mb-3 font-display">
-                  Wedding Info Form — Sirf Bhai ke liye 😄
+                  Wedding Info Form — Teri shaadi, meri zimmedaari 😄
                 </p>
 
                 <p className="section-subtitle max-w-lg mx-auto text-sm sm:text-base mb-6 leading-relaxed text-stone-700">
-                  Yaar, baar baar message karne ki jagah — ek baar sab yahan fill kar do! 🙏 Yeh form bilkul sirf teri shaadi ke details collect karne ke liye hai, koi invitation nahi ban raha abhi. Bhai ko sahi spellings, dates, aur venues chahiye — toh seedha yahan bhar do. Sabkuch apne aap save hota rehta hai, apni pace se bharo, koi rush nahi hai.
+                  Teri shaadi hai, toh sab kuch sahi hona chahiye na! 😊 Isliye yeh chhota sa form banaya hai — taaki baar baar message karne ki zaroorat na pade. Koi invitation nahi ban raha abhi, bas mujhe sahi names, dates, aur venues chahiye. Apne time pe bharna, koi rush nahi — sab kuch automatically save hota rehta hai. ❤️
                 </p>
 
                 <div className="max-w-md mx-auto mb-8 bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 text-xs text-amber-950 text-left space-y-2">
                   <div className="flex items-center gap-2 font-bold text-maroon">
                     <span>📋</span>
-                    <span>Jaldi overview — kya zaroori hai, kya chhod sakte ho:</span>
+                    <span>Ek nazar — kya zaroori hai, kya chhod sakti hai:</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-rose-700 font-bold">★ Zaroori (Must Fill):</span>
-                    <span>Mummy-Papa ke naam, Dulhe ka naam, Venue aur RSVP contacts — yeh toh bhar hi do yaar!</span>
+                    <span className="text-rose-700 font-bold">★ Zaroori hai:</span>
+                    <span>Mummy-Papa ke naam, dulhe ka naam, venue aur RSVP contacts.</span>
                   </div>
                   <div className="flex items-start gap-2">
-                    <span className="text-emerald-700 font-bold">✓ Skip kar sakte ho:</span>
-                    <span>Dada-Dadi, Nickname/Monogram, Dates (already filled hain), aur Well-wishers.</span>
+                    <span className="text-emerald-700 font-bold">✓ Skip kar sakti hai:</span>
+                    <span>Dada-Dadi, nickname/monogram, dates (pehle se filled hain), aur well-wishers.</span>
                   </div>
                 </div>
 
@@ -496,7 +496,7 @@ export default function QuestionnairePage() {
                   onClick={goToNextStep}
                   className="btn-primary text-base !py-3.5 !px-8"
                 >
-                  Chalo Shuru Karte Hain! ✨
+                  Chalo Shuru Karte Hain! 💛
                 </button>
               </div>
             )}
@@ -513,9 +513,9 @@ export default function QuestionnairePage() {
                       ★ Must Fill
                     </span>
                   </div>
-                  <h2 className="section-header mt-1">Mummy-Papa Ki Details 🙏</h2>
+                  <h2 className="section-header mt-1">Mummy-Papa ki Details 😊</h2>
                   <p className="section-subtitle">
-                    Yaar, Mummy-Papa ke naam aur contact — ekdum sahi spelling mein bhar dena!
+                    Mummy-Papa ke naam mujhe pata hain, par spelling ekdum sahi chahiye invitation ke liye — ek baar confirm kar de please!
                   </p>
                 </div>
 
@@ -547,7 +547,7 @@ export default function QuestionnairePage() {
                       />
                     </div>
                     <p className="field-note">
-                      ✦ Naam toh pata hai, par spelling aur jo use karna chahti ho woh confirm karna tha ❤️
+                      ✦ Naam toh pata hai mujhe, par exactly kaise likhna hai woh tu confirm kar de ❤️
                     </p>
                   </div>
 
@@ -593,7 +593,7 @@ export default function QuestionnairePage() {
                       required
                     />
                     <p className="field-note">
-                      ✦ Ghar ka pura address — Bhai invitation mein daalega, toh ekdum sahi bhar dena!
+                      ✦ Ghar ka pura address chahiye mujhe — invitation mein daalenge, toh sahi likhna 😊
                     </p>
                   </div>
 
@@ -615,7 +615,7 @@ export default function QuestionnairePage() {
                         className="wedding-input tracking-wider font-mono text-base"
                         required
                       />
-                      <p className="field-note">✦ 10 digits — e.g. 98765 43210 (XXXXX XXXXX format)</p>
+                      <p className="field-note">✦ 10 digits — e.g. 98765 43210</p>
                     </div>
                     <div>
                       <label className="field-label" htmlFor="mobile_2">
@@ -632,7 +632,7 @@ export default function QuestionnairePage() {
                         onChange={(e) => updateField("mobile_2", formatMobileNumber(e.target.value))}
                         className="wedding-input tracking-wider font-mono text-base"
                       />
-                      <p className="field-note">✦ Dusra number ho toh daal do, warna chhod do — optional hai!</p>
+                      <p className="field-note">✦ Ek aur number hai toh likh de, warna chhod de — optional hai</p>
                     </div>
                   </div>
                 </div>
@@ -651,9 +651,9 @@ export default function QuestionnairePage() {
                       ✓ Can Skip / Optional
                     </span>
                   </div>
-                  <h2 className="section-header mt-1">Dada-Dadi Ji ka Naam 🙏</h2>
+                  <h2 className="section-header mt-1">Dada-Dadi Ji 🙏</h2>
                   <p className="section-subtitle">
-                    Jinke ashirwaad se yeh shaadi ho rahi hai! Agar naam include karne ho toh bhar do, warna skip bhi kar sakte ho.
+                    Jinke ashirwaad se yeh shaadi ho rahi hai — agar unka naam include karna hai toh likh de, warna skip kar sakti hai.
                   </p>
                 </div>
 
@@ -670,7 +670,7 @@ export default function QuestionnairePage() {
                       onChange={(e) => updateField("grandfather_name", e.target.value)}
                       className="wedding-input"
                     />
-                    <p className="field-note">✦ You may include honorifics or pet names like &quot;Tata&quot; or &quot;Dada Ji&quot;.</p>
+                    <p className="field-note">✦ Pyaar se jo bulate ho woh bhi chal sakta hai — jaise &quot;Tata&quot; ya &quot;Dada Ji&quot; — jo invitation pe achha lage!</p>
                   </div>
 
                   <div>
@@ -685,7 +685,7 @@ export default function QuestionnairePage() {
                       onChange={(e) => updateField("grandmother_name", e.target.value)}
                       className="wedding-input"
                     />
-                    <p className="field-note">✦ You may include honorifics or pet names like &quot;Aaya&quot; or &quot;Dadi Ji&quot; (or leave blank).</p>
+                    <p className="field-note">✦ Jaise &quot;Aaya&quot; ya &quot;Dadi Ji&quot; — ya agar nahi likhna toh chhod sakti hai!</p>
                   </div>
                 </div>
               </div>
@@ -705,7 +705,7 @@ export default function QuestionnairePage() {
                   </div>
                   <h2 className="section-header mt-1">Dulhan Ji — Tera Naam! 👰💛</h2>
                   <p className="section-subtitle">
-                    Tera naam toh pehle se fill hai, par ek baar confirm kar lena! Aur agar koi nickname ya monogram chahiye toh woh bhi bata de.
+                    Tera naam toh pehle se daala hua hai, ek baar dekh le — aur agar koi nickname ya monogram chahiye toh bata de.
                   </p>
                 </div>
 
@@ -723,7 +723,7 @@ export default function QuestionnairePage() {
                       className="wedding-input font-display font-semibold text-lg"
                       required
                     />
-                    <p className="field-note">✦ Your lovely full name for our family records ❤️</p>
+                    <p className="field-note">✦ Sahi spelling wala pura naam — jo invitation pe aana chahiye ❤️</p>
                   </div>
 
                   <div>
@@ -739,7 +739,7 @@ export default function QuestionnairePage() {
                       className="wedding-input"
                     />
                     <p className="field-note">
-                      ✦ Agar initials ya monogram use karna ho toh bata — jaise M. 😊 — otherwise skip kar do!
+                      ✦ Koi initials ya monogram use karna hai toh likh de — jaise M. 😊 — warna yeh chhod de!
                     </p>
                   </div>
                 </div>
@@ -760,7 +760,7 @@ export default function QuestionnairePage() {
                   </div>
                   <h2 className="section-header mt-1">Dulhe Raja aur Unka Parivaar 🎩</h2>
                   <p className="section-subtitle">
-                    Ab sabse important! Dulhe ka naam aur unke Mummy-Papa ke naam — ekdum sahi bhar dena yaar!
+                    Haan haan, sabse important step! 🙈 Dulhe ka full naam likh de please — aur unke Mummy-Papa ke naam bhi.
                   </p>
                 </div>
 
@@ -778,7 +778,7 @@ export default function QuestionnairePage() {
                       className="wedding-input font-display font-semibold text-lg"
                       required
                     />
-                    <p className="field-note">✦ Enter full name (e.g. रामधारी सिंह दिनकर)</p>
+                    <p className="field-note">✦ Pura naam likh de please — jaise रामधारी सिंह दिनकर</p>
                   </div>
 
                   {/* Groom Mother */}
@@ -839,7 +839,7 @@ export default function QuestionnairePage() {
                   <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-xl text-xs text-amber-950 flex items-start gap-2">
                     <span className="text-sm">🕊️</span>
                     <span>
-                      <strong>Ek zaroori baat:</strong> Agar koi parent ya elder swarg sidhaar gaye hain (Late / Swargiya), toh dropdown se <em>&quot;Late&quot;</em> prefix zaroor select kar lena — unhe respectfully yaad kiya jayega invitation mein. 🙏
+                      <strong>Ek zaroori baat:</strong> Agar koi parent ya elder swarg sidhar gaye hain, toh dropdown se <em>&quot;Late&quot;</em> prefix select kar lena — unhe invitation mein respectfully yaad karenge. 🙏
                     </span>
                   </div>
                 </div>
@@ -858,9 +858,9 @@ export default function QuestionnairePage() {
                       ✓ Pre-filled (Can Skip)
                     </span>
                   </div>
-                  <h2 className="section-header mt-1">Shubh Din — Shaadi ki Dates 📅</h2>
+                  <h2 className="section-header mt-1">Shubh Dates 📅</h2>
                   <p className="section-subtitle">
-                    Dates already fill hain — 30 Jan 2027 shaadi, 29 Jan Haldi/Mehndi. Agar kuch change ho gaya ho toh yahan update kar do!
+                    Dates pehle se fill hain — 30 Jan 2027 shaadi, 29 Jan Haldi aur Mehndi. Agar kuch change hua ho toh yahan update kar le.
                   </p>
                 </div>
 
@@ -916,9 +916,9 @@ export default function QuestionnairePage() {
                       ★ Must Fill
                     </span>
                   </div>
-                  <h2 className="section-header mt-1">Jagah Kahan Hai? — Venues 📍</h2>
+                  <h2 className="section-header mt-1">Venues 📍</h2>
                   <p className="section-subtitle">
-                    Shaadi kahan hogi, Haldi-Mehndi kahan — sab yahan confirm kar do. Wedding venue toh already set hai, bas ek baar dekh lena!
+                    Shaadi kahan hogi, Haldi-Mehndi kahan — sab confirm kar le. Wedding venue toh set hai, bas ek baar dekh le please!
                   </p>
 
                   <div className="mt-3.5 bg-amber-50/80 border border-amber-300/80 rounded-xl p-3.5 text-xs text-amber-950 space-y-1.5">
@@ -960,7 +960,7 @@ export default function QuestionnairePage() {
                       <span className="text-stone-500 font-serif italic">Sector 16, Faridabad</span>
                     </div>
                     <p className="field-note text-amber-900 font-medium mt-1">
-                      ✦ Yeh zaroori hai yaar — guests ko sahi address milna chahiye! Pura address verify kar lena.
+                      ✦ Guests ko sahi address milna chahiye — pura address ek baar verify kar le please.
                     </p>
                   </div>
 
@@ -1067,12 +1067,12 @@ export default function QuestionnairePage() {
                       ★ Must Fill
                     </span>
                   </div>
-                  <h2 className="section-header mt-1">Kisse Contact Karen? — R.S.V.P. 📞</h2>
+                  <h2 className="section-header mt-1">Kisse Contact Karein? 📞</h2>
                   <p className="section-subtitle">
-                    Guests agar kuch poochhen toh kisse milein? Chacha Ji, bhaiya, ya coordinator — naam bata do!
+                    Guests agar kuch poochhein toh kisse milein? Chacha Ji, koi bhaiya, ya coordinator — ek naam toh likh de please.
                   </p>
                   <p className="field-note text-amber-800/80 mt-1">
-                    ✦ Bas naam ya designation kaafi hai, number optional hai!
+                    ✦ Sirf naam ya relation kaafi hai, number optional hai.
                   </p>
                 </div>
 
@@ -1081,7 +1081,7 @@ export default function QuestionnairePage() {
                     <div key={index} className="flex items-center gap-2">
                       <input
                         type="text"
-                        placeholder="e.g. Chacha Ji — 98765 43210 (number optional hai)"
+                        placeholder="e.g. Chacha Ji — 98765 43210 (number optional)"
                         value={contact}
                         onChange={(e) => handleRsvpChange(index, e.target.value)}
                         className="wedding-input flex-1"
@@ -1128,7 +1128,7 @@ export default function QuestionnairePage() {
                     With Best Compliments From 🌸
                   </h2>
                   <p className="section-subtitle text-xs italic text-stone-500">
-                    Nanihal, Mama Ji, cousins, dost-yaar — jo bhi well-wishers hain unke naam daal do!
+                    Nanihal, Mama Ji, cousins, dost-yaar — jo bhi well-wishers hain unke naam likh de!
                   </p>
                 </div>
 
@@ -1179,9 +1179,9 @@ export default function QuestionnairePage() {
                       ★ Ready to Save
                     </span>
                   </div>
-                  <h2 className="section-header mt-1">Ek Baar Check Karo! Review ✅</h2>
+                  <h2 className="section-header mt-1">Ek Baar Check Kar Le! ✅</h2>
                   <p className="section-subtitle">
-                    Sab theek hai na? Ek baar neeche sab dekh lo, phir Save Details kar dena!
+                    Sab theek lagta hai? Ek baar neeche sab dekh le apni taraf se, phir save kar dena!
                   </p>
                 </div>
 
@@ -1328,7 +1328,7 @@ export default function QuestionnairePage() {
                 {/* Additional Notes Textarea */}
                 <div className="mb-6">
                   <label className="field-label" htmlFor="additional_notes">
-                    Kuch Khaas Note ya Special Instructions? (Optional)
+                    Kuch Khaas Note ya Instructions? (Optional)
                   </label>
                   <textarea
                     id="additional_notes"
@@ -1366,7 +1366,7 @@ export default function QuestionnairePage() {
                     )}
                   </button>
                   <p className="text-xs text-stone-500 font-serif italic mt-3">
-                    Sab details safely database mein save ho jayenge — sirf Bhai dekh sakta hai! 🔒
+                    Teri details safely save ho jayengi — sirf main dekh sakta hoon. 🔒
                   </p>
                 </div>
               </div>
@@ -1389,7 +1389,7 @@ export default function QuestionnairePage() {
                     onClick={goToPrevStep}
                     className="btn-secondary"
                   >
-                    ← Peeche Jao
+                    ← Peeche
                   </button>
 
                   <div className="flex items-center gap-2 sm:gap-3">
@@ -1399,7 +1399,7 @@ export default function QuestionnairePage() {
                         onClick={skipStep}
                         className="btn-ghost !text-xs !py-2.5 !px-3.5 text-stone-500 hover:text-stone-700 border border-stone-200 hover:border-stone-400 rounded-xl"
                       >
-                        Yeh Step Skip Karo ↷
+                        Yeh Step Skip Kar ↷
                       </button>
                     )}
                     <button
@@ -1407,7 +1407,7 @@ export default function QuestionnairePage() {
                       onClick={goToNextStep}
                       className="btn-primary"
                     >
-                      Aage Badho →
+                      Aage →
                     </button>
                   </div>
                 </div>
@@ -1473,7 +1473,7 @@ export default function QuestionnairePage() {
       {/* ─── Footer ─── */}
       <footer className="site-footer">
         <p className="text-xs text-stone-500 font-serif">
-          Pyaar se banaya Bhai ne — sirf <strong>Rupa (₹upi)</strong> ke liye ❤️ • Kisan Bhawan, Sector 16, Faridabad
+          Pyaar se banaya — sirf <strong>Rupa (₹upi)</strong> ke liye ❤️ • Kisan Bhawan, Sector 16, Faridabad
         </p>
       </footer>
     </>
