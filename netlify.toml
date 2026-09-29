@@ -1,0 +1,24 @@
+# ==============================================================================
+# Netlify Configuration for Next.js App Router
+# ==============================================================================
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+# Official Netlify Next.js runtime plugin — handles SSR, App Router, and API routes
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "22"
+  # Strictly prevent Netlify from injecting any drawer, badge, or feedback widget
+  DISABLE_NETLIFY_DRAWER = "true"
+
+# Ensure clean routing and caching headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

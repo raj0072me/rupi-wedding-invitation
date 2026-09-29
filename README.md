@@ -170,19 +170,31 @@ ON wedding_submissions(created_at DESC);
 
 ---
 
-## 🌐 Deployment to Cloudflare Pages
+## 🌐 Deployment Guides
 
-1. Push your code to GitHub: `raj0072me/rupi-wedding-invitation`.
-2. Connect your repo in [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
-3. **Build settings**:
+### Option A: Netlify Deployment
+This project includes pre-configured [`netlify.toml`](file:///c:/Users/raj00/OneDrive/Desktop/temp_apps/rupi_wedding_invitation_form/netlify.toml) and `.node-version` (Node 22):
+1. Connect your repository `raj0072me/rupi-wedding-invitation` in [Netlify Dashboard](https://app.netlify.com).
+2. Netlify will automatically detect:
+   - **Build command**: `npm run build`
+   - **Publish directory**: `.next`
+   - **Runtime plugin**: `@netlify/plugin-nextjs`
+3. In **Site Configuration** → **Environment Variables**, add:
+   - `DATABASE_URL`: Your Neon PostgreSQL connection string
+   - `ADMIN_SECRET`: Your secret admin passcode (`9899654695`)
+4. **No badges/widgets**: Netlify drawer & preview badges are explicitly disabled via `DISABLE_NETLIFY_DRAWER = "true"`.
+
+### Option B: Cloudflare Pages Deployment
+1. Connect repo in [Cloudflare Dashboard](https://dash.cloudflare.com) → **Workers & Pages** → **Create application** → **Pages** → **Connect to Git**.
+2. **Build settings**:
    - Framework preset: `Next.js`
    - Build command: `npm run build`
    - Output directory: `.next`
-4. **Environment variables**:
+3. **Environment variables**:
    - `DATABASE_URL`: Your Neon PostgreSQL connection string
    - `ADMIN_SECRET`: Your secret admin passcode (`9899654695`)
-   - `NODE_VERSION`: `20`
-5. Click **Save and Deploy**. Your site will be live at `https://rupi-wedding-invitation.pages.dev`!
+   - `NODE_VERSION`: `20` or `22`
+4. Click **Save and Deploy**. Live at `https://rupi-wedding-invitation.pages.dev`!
 
 ---
 
