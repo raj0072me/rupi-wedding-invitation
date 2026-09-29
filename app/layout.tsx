@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import MusicPlayer from "./components/MusicPlayer";
+import PetalCanvas from "./components/PetalCanvas";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -65,11 +66,14 @@ export default function RootLayout({
         {/* Background Mandala & Ambient Radiance */}
         <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-pattern-layer" aria-hidden="true" />
 
+        {/* Falling Petals Animation */}
+        <PetalCanvas />
+
         {/* Ambient Music Player */}
         <MusicPlayer />
 
         {/* Main Content Area */}
-        <div className="relative z-10 flex flex-col min-h-screen">
+        <div className="relative z-20 flex flex-col min-h-screen">
           {children}
         </div>
       </body>
