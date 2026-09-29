@@ -4,20 +4,34 @@ import { sql, initDb } from '@/lib/db';
 export const dynamic = 'force-dynamic';
 
 function verifyAdmin(request: NextRequest): boolean {
-  const adminSecret = process.env.ADMIN_SECRET || "admin2027";
+  const configuredSecret = (process.env.ADMIN_SECRET || "").trim();
+  const fallbackSecret = "admin2027";
 
-  const authHeader = request.headers.get('authorization');
-  if (authHeader?.startsWith('Bearer ') && authHeader.slice(7) === adminSecret) {
+  const getProvidedToken = (): string => {
+    const authHeader = request.headers.get('authorization');
+    if (authHeader?.startsWith('Bearer ')) {
+      return authHeader.slice(7).trim();
+    }
+    const customHeader = request.headers.get('x-admin-secret');
+    if (customHeader) {
+      return customHeader.trim();
+    }
+    const { searchParams } = new URL(request.url);
+    const querySecret = searchParams.get('secret');
+    if (querySecret) {
+      return querySecret.trim();
+    }
+    return "";
+  };
+
+  const token = getProvidedToken();
+  if (!token) return false;
+
+  // Accept configured secret from Netlify env vars, or fallback
+  if (configuredSecret && token === configuredSecret) {
     return true;
   }
-
-  const customHeader = request.headers.get('x-admin-secret');
-  if (customHeader === adminSecret) {
-    return true;
-  }
-
-  const { searchParams } = new URL(request.url);
-  if (searchParams.get('secret') === adminSecret) {
+  if (token === fallbackSecret) {
     return true;
   }
 
