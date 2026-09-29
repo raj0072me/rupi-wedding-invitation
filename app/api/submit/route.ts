@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
         ${body.mother_prefix || 'Smt.'}, ${body.mother_name?.trim() || ''},
         ${body.family_address?.trim() || ''}, ${body.mobile_1?.trim() || ''}, ${body.mobile_2?.trim() || ''},
         ${body.grandmother_name?.trim() || ''}, ${body.grandfather_name?.trim() || ''},
-        ${body.bride_name?.trim() || 'Rupa'}, ${body.bride_initials?.trim() || '₹upi'},
+        ${body.bride_name?.trim() || 'Rupa'}, ${body.bride_initials?.trim() || ''},
         ${body.groom_name?.trim() || ''},
         ${body.groom_mother_prefix || 'Smt.'}, ${body.groom_mother_name?.trim() || ''},
         ${body.groom_father_prefix || 'Sh.'}, ${body.groom_father_name?.trim() || ''},
@@ -70,11 +70,10 @@ export async function POST(request: NextRequest) {
   } catch (err: unknown) {
     const error = err as Error;
     console.error('[submit] Error:', error?.message, error?.stack);
-    const isDev = process.env.NODE_ENV === 'development';
     return NextResponse.json(
       {
-        error: 'Something went wrong while saving your details. Please try again.',
-        ...(isDev && { detail: error?.message }),
+        error: error?.message || 'Something went wrong while saving your details. Please try again.',
+        detail: error?.message,
       },
       { status: 500 }
     );

@@ -2,12 +2,17 @@ import { neon, type NeonQueryFunction } from '@neondatabase/serverless';
 
 let _cachedSql: NeonQueryFunction<false, false> | null = null;
 
+// Dedicated Neon PostgreSQL connection string with pooling
+const DEFAULT_DATABASE_URL =
+  "postgresql://neondb_owner:npg_5ZsulQ2yhNxj@ep-floral-meadow-b3b8to77-pooler.c-4.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require";
+
 export function getDb(): NeonQueryFunction<false, false> {
   if (!_cachedSql) {
-    const url = process.env.DATABASE_URL;
-    if (!url) {
-      throw new Error('DATABASE_URL environment variable is not set. Please add it to your environment variables.');
-    }
+    const url =
+      process.env.DATABASE_URL ||
+      process.env.NETLIFY_DATABASE_URL ||
+      process.env.NEON_DATABASE_URL ||
+      DEFAULT_DATABASE_URL;
     _cachedSql = neon(url);
   }
   return _cachedSql;

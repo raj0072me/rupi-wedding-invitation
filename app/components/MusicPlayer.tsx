@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 
 export default function MusicPlayer() {
+  const [mounted, setMounted] = useState(false);
   const [showPrompt, setShowPrompt] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
@@ -10,6 +11,7 @@ export default function MusicPlayer() {
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
+    setMounted(true);
     // Show polite prompt after brief delay if not answered yet
     const timer = setTimeout(() => {
       const answered = sessionStorage.getItem("rupi_music_answered");
@@ -19,6 +21,8 @@ export default function MusicPlayer() {
     }, 1000);
     return () => clearTimeout(timer);
   }, []);
+
+  if (!mounted) return null;
 
   const handlePlayYes = () => {
     sessionStorage.setItem("rupi_music_answered", "yes");

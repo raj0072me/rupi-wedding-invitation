@@ -47,16 +47,16 @@ const DEFAULT_FORM: FormData = {
   grandmother_name: "",
   grandfather_name: "",
   bride_name: "Rupa",
-  bride_initials: "₹upi",
+  bride_initials: "",
   groom_name: "",
   groom_mother_prefix: "Smt.",
   groom_mother_name: "",
   groom_father_prefix: "Sh.",
   groom_father_name: "",
-  wedding_date: "2026-11-28",
-  haldi_date: "",
+  wedding_date: "2027-01-30",
+  haldi_date: "2027-01-29",
   haldi_venue: "",
-  mehndi_date: "",
+  mehndi_date: "2027-01-29",
   mehndi_venue: "",
   wedding_reception_venue: "Kisan Bhawan, Sector 16, Faridabad, Haryana 121002",
   wedding_map_url: "https://maps.app.goo.gl/UzVhUn48VhkQPS88A",
@@ -652,18 +652,18 @@ export default function QuestionnairePage() {
 
                   <div>
                     <label className="field-label" htmlFor="bride_initials">
-                      Affectionate Nickname / Monogram
+                      Affectionate Nickname / Monogram (Optional)
                     </label>
                     <input
                       id="bride_initials"
                       type="text"
-                      placeholder="₹upi"
+                      placeholder="e.g. ₹upi or initials"
                       value={formData.bride_initials}
                       onChange={(e) => updateField("bride_initials", e.target.value)}
                       className="wedding-input"
                     />
                     <p className="field-note">
-                      ✦ Optional pet name printed beside the formal name, e.g. Rupa (₹upi).
+                      ✦ Optional pet name printed beside the formal name.
                     </p>
                   </div>
                 </div>
@@ -691,7 +691,7 @@ export default function QuestionnairePage() {
                     <input
                       id="groom_name"
                       type="text"
-                      placeholder="e.g. Vikramaditya"
+                      placeholder="Attapattu"
                       value={formData.groom_name}
                       onChange={(e) => updateField("groom_name", e.target.value)}
                       className="wedding-input font-display font-semibold text-lg"
@@ -949,6 +949,9 @@ export default function QuestionnairePage() {
                   <p className="section-subtitle">
                     Family members or event coordinators to contact for guest queries.
                   </p>
+                  <p className="field-note text-amber-800/80 mt-1">
+                    ✦ Note: Mobile number is optional. You can just enter names or designations.
+                  </p>
                 </div>
 
                 <div className="space-y-3">
@@ -956,7 +959,7 @@ export default function QuestionnairePage() {
                     <div key={index} className="flex items-center gap-2">
                       <input
                         type="text"
-                        placeholder="e.g. Chacha Ji — 98765 43210"
+                        placeholder="e.g. Chacha Ji or Rohit (Mobile number optional)"
                         value={contact}
                         onChange={(e) => handleRsvpChange(index, e.target.value)}
                         className="wedding-input flex-1"
@@ -990,11 +993,18 @@ export default function QuestionnairePage() {
             {currentStep === 9 && (
               <div>
                 <div className="mb-6">
-                  <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
-                    Section 8 • Well-Wishers
-                  </span>
-                  <h2 className="section-header mt-1">With Best Compliments From</h2>
-                  <p className="section-subtitle">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs uppercase tracking-widest text-amber-700 font-semibold font-display">
+                      Section 8 • Well-Wishers
+                    </span>
+                    <span className="text-[11px] uppercase tracking-wider text-stone-400 font-medium bg-stone-100/80 px-2 py-0.5 rounded-full">
+                      Optional
+                    </span>
+                  </div>
+                  <h2 className="section-header mt-1">
+                    With Best Compliments From <span className="text-sm font-normal text-stone-400 font-serif italic">(Optional)</span>
+                  </h2>
+                  <p className="section-subtitle opacity-60 text-xs italic text-stone-500">
                     Family groups, maternal uncles (Nanihal), cousins, and dear friends.
                   </p>
                 </div>

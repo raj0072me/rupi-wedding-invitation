@@ -29,10 +29,10 @@ export default function RoyalDatePicker({
   const [isOpen, setIsOpen] = useState(false);
   const baseId = useId();
 
-  // Parse existing date or default to late 2026 / current date
-  const initialDate = value ? new Date(value + "T00:00:00") : new Date(2026, 10, 28);
-  const [viewYear, setViewYear] = useState(initialDate.getFullYear() || 2026);
-  const [viewMonth, setViewMonth] = useState(initialDate.getMonth() || 10); // 0-indexed
+  // Parse existing date or default to January 2027
+  const initialDate = value ? new Date(value + "T00:00:00") : new Date(2027, 0, 30);
+  const [viewYear, setViewYear] = useState(initialDate.getFullYear() || 2027);
+  const [viewMonth, setViewMonth] = useState(initialDate.getMonth() ?? 0); // 0-indexed (January)
 
   // Format date display
   const formatDisplay = (dateStr: string) => {
@@ -190,28 +190,21 @@ export default function RoyalDatePicker({
             {/* Quick Season Presets */}
             <div className="px-4 pt-3 pb-2 flex items-center gap-2 overflow-x-auto text-xs no-scrollbar border-b border-amber-100 bg-amber-50/40">
               <span className="text-amber-800 font-semibold whitespace-nowrap text-[11px] uppercase tracking-wider">
-                Auspicious Seasons:
+                Auspicious Dates:
               </span>
               <button
                 type="button"
                 className="preset-pill"
-                onClick={() => handleQuickPreset(2026, 10, 28)}
+                onClick={() => handleQuickPreset(2027, 0, 30)}
               >
-                Nov 28, 2026
+                30 Jan 2027 (Wedding)
               </button>
               <button
                 type="button"
                 className="preset-pill"
-                onClick={() => handleQuickPreset(2026, 11, 12)}
+                onClick={() => handleQuickPreset(2027, 0, 29)}
               >
-                Dec 12, 2026
-              </button>
-              <button
-                type="button"
-                className="preset-pill"
-                onClick={() => handleQuickPreset(2027, 0, 18)}
-              >
-                Jan 18, 2027
+                29 Jan 2027 (Haldi/Mehndi)
               </button>
             </div>
 
