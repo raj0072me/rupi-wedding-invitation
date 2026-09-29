@@ -292,7 +292,7 @@ export default function QuestionnairePage() {
       // Success! Clear local draft
       try {
         localStorage.removeItem(STORAGE_KEY);
-      } catch {}
+      } catch { }
 
       setSubmissionSuccess({
         id: data.id,
@@ -403,10 +403,10 @@ export default function QuestionnairePage() {
             </div>
 
             <h2 className="section-header text-2xl sm:text-3xl text-maroon mb-2">
-              Shukriya Rupi! ❤️
+              Koti Koti Dhanyawaad ₹upi! ❤️
             </h2>
             <p className="section-subtitle max-w-md mx-auto mb-6 text-base">
-              Teri details mil gayi mujhe — bahut achha kiya jo time nikala. Ab main sab handle kar lunga, tu bas apni shaadi enjoy kar! 💪
+              Teri details mil jayegi mujhe ! 💪
             </p>
 
             <div className="bg-amber-50/80 border border-amber-300 rounded-xl p-4 max-w-sm mx-auto mb-8 text-left text-xs space-y-1.5">
@@ -472,7 +472,7 @@ export default function QuestionnairePage() {
                 </p>
 
                 <p className="section-subtitle max-w-lg mx-auto text-sm sm:text-base mb-6 leading-relaxed text-stone-700">
-                  Teri shaadi hai, toh sab kuch sahi hona chahiye na! 😊 Isliye yeh chhota sa form banaya hai — taaki baar baar message karne ki zaroorat na pade. Koi invitation nahi ban raha abhi, bas mujhe sahi names, dates, aur venues chahiye. Apne time pe bharna, koi rush nahi — sab kuch automatically save hota rehta hai. ❤️
+                  Teri shaadi hai, aur tu busy hogi! 😊 Isliye yeh chhota sa form banaya hai — taaki baar baar message karne ki zaroorat na pade choti details ke liye. yeh card ka design nahi hai, bas mujhe sahi names, dates, aur venues chahiye. Apne time pe bhariyo aram se, koi rush nahi — sab kuch automatically save hota Rahega. 😃
                 </p>
 
                 <div className="max-w-md mx-auto mb-8 bg-amber-50/70 border border-amber-200/80 rounded-2xl p-4 text-xs text-amber-950 text-left space-y-2">
@@ -496,7 +496,7 @@ export default function QuestionnairePage() {
                   onClick={goToNextStep}
                   className="btn-primary text-base !py-3.5 !px-8"
                 >
-                  Chalo Shuru Karte Hain! 💛
+                  Let's Start! 💛
                 </button>
               </div>
             )}
@@ -515,7 +515,7 @@ export default function QuestionnairePage() {
                   </div>
                   <h2 className="section-header mt-1">Mummy-Papa ki Details 😊</h2>
                   <p className="section-subtitle">
-                    Mummy-Papa ke naam mujhe pata hain, par spelling ekdum sahi chahiye invitation ke liye — ek baar confirm kar de please!
+                    Mummy-Papa ke naam mujhe pata hain, par spelling ekdum sahi chahiye invitation ke liye — ek baar confirm kar diyo!
                   </p>
                 </div>
 
@@ -593,7 +593,7 @@ export default function QuestionnairePage() {
                       required
                     />
                     <p className="field-note">
-                      ✦ Ghar ka pura address chahiye mujhe — invitation mein daalenge, toh sahi likhna 😊
+                      ✦ Ghar ka pura address — invitation mein daalna hota hai, toh sahi likhna 😊
                     </p>
                   </div>
 
@@ -1072,7 +1072,7 @@ export default function QuestionnairePage() {
                     Guests agar kuch poochhein toh kisse milein? Chacha Ji, koi bhaiya, ya coordinator — ek naam toh likh de please.
                   </p>
                   <p className="field-note text-amber-800/80 mt-1">
-                    ✦ Sirf naam ya relation kaafi hai, number optional hai.
+                    ✦ Sirf naam kaafi hai, number optional hai.
                   </p>
                 </div>
 
