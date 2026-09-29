@@ -378,18 +378,7 @@ export default function QuestionnairePage() {
           </div>
         )}
 
-        {/* Live Auto-save indicator */}
-        <div className="flex items-center justify-end mb-3 pr-1">
-          <span className="text-[11px] text-stone-500 font-serif italic flex items-center gap-1">
-            {isSavedNotice ? (
-              <span className="text-emerald-700 font-medium flex items-center gap-1">
-                ✓ Save ho gaya! 🙌
-              </span>
-            ) : (
-              <span>🔒 Har keystroke pe automatically save hota rehta hai</span>
-            )}
-          </span>
-        </div>
+
 
         {/* ─── Submission Success View ─── */}
         {submissionSuccess ? (
@@ -1467,6 +1456,19 @@ export default function QuestionnairePage() {
           </div>
         </div>
       )}
+
+      {/* ─── Live Auto-Save Indicator ─── */}
+      <div className="flex items-center justify-center mb-3 text-center">
+        <span className="text-[11px] text-stone-500 font-serif italic inline-flex items-center gap-1.5 bg-amber-50/80 px-3.5 py-1 rounded-full border border-amber-200/70 shadow-xs">
+          {isSavedNotice ? (
+            <span className="text-emerald-700 font-medium flex items-center gap-1">
+              ✓ Saved automatically
+            </span>
+          ) : (
+            <span>🔒 All changes are automatically saved with every keystroke</span>
+          )}
+        </span>
+      </div>
 
       {/* ─── Footer ─── */}
       <footer className="site-footer">
