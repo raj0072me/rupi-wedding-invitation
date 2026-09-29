@@ -1471,7 +1471,7 @@ export default function QuestionnairePage() {
       {/* ─── Footer ─── */}
       <footer className="site-footer">
         <p className="text-xs text-stone-500 font-serif">
-          Pyaar se banaya — sirf <strong>Rupa (₹upi)</strong> ke liye ❤️ • Kisan Bhawan, Sector 16, Faridabad
+          <strong>© Rupa (₹upi) KoS 2026 </strong>
         </p>
       </footer>
     </>
