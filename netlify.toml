@@ -3,7 +3,7 @@
 # ==============================================================================
 
 [build]
-  command = "NODE_ENV=production npm run build"
+  command = "npm run build"
   publish = ".next"
 
 # Official Netlify Next.js runtime plugin — handles SSR, App Router, and API routes
@@ -12,7 +12,7 @@
 
 [build.environment]
   NODE_VERSION = "22"
-  NODE_ENV = "production"
+  NPM_FLAGS = "--include=dev"
   # Strictly prevent Netlify from injecting any drawer, badge, or feedback widget
   DISABLE_NETLIFY_DRAWER = "true"
 
