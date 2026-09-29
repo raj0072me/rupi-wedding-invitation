@@ -358,7 +358,7 @@ export default function QuestionnairePage() {
       </header>
 
       {/* ─── Main Content Container ─── */}
-      <main className="form-container py-8 flex-1">
+      <main className="form-container pt-4 pb-20 sm:pb-28 flex-1">
         {/* Draft Restored Banner */}
         {isRestored && (
           <div className="mb-6 bg-amber-50/90 border border-amber-300 rounded-xl p-3.5 flex items-center justify-between text-xs text-amber-900 shadow-sm fade-in">
@@ -1470,8 +1470,9 @@ export default function QuestionnairePage() {
 
       {/* ─── Footer ─── */}
       <footer className="site-footer">
-        <p className="text-xs text-stone-500 font-serif">
-          <strong>© Rupa (₹upi) KoS 2026 </strong>
+        <div className="w-16 h-0.5 bg-gradient-to-r from-transparent via-amber-300 to-transparent mb-2.5 opacity-80" />
+        <p className="text-xs text-stone-500 font-serif tracking-wider text-center">
+          <strong>© Rupa (₹upi) KoS 2026</strong>
         </p>
       </footer>
     </>

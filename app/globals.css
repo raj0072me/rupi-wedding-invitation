@@ -161,6 +161,7 @@ body {
   position: relative;
   overflow: hidden;
   transition: transform 0.25s ease, box-shadow 0.25s ease;
+  margin-bottom: 2.5rem;
 }
 
 .wedding-card::before {
@@ -1219,11 +1220,35 @@ body {
   50% { box-shadow: 0 0 0 10px rgba(212, 175, 55, 0); }
 }
 
+/* ─── Site Footer ─── */
+.site-footer {
+  width: 100%;
+  text-align: center;
+  padding: 2rem 1.25rem 5.5rem 1.25rem;
+  margin-top: auto;
+  position: relative;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ─── Mobile Optimizations ─── */
 @media (max-width: 640px) {
   .wedding-card {
     padding: 1.5rem 1.1rem;
     border-radius: 1.25rem;
+    margin-bottom: 3.5rem;
+  }
+
+  .site-footer {
+    padding-bottom: 6rem;
+  }
+
+  .floating-music-widget {
+    bottom: 1rem;
+    right: 1rem;
   }
 
   .section-header {
@@ -1250,3 +1275,4 @@ body {
     width: 80px;
   }
 }
+
