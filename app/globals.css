@@ -40,6 +40,26 @@ html {
   -webkit-text-size-adjust: 100%;
 }
 
+/* ─── Permanently Suppress Any Host Badges (Netlify Drawer / Feedback / Watermarks) ─── */
+[data-netlify-drawer],
+#netlify-drawer,
+#netlify-feedback,
+.netlify-badge,
+iframe[src*="netlify"],
+div[class*="netlify"],
+a[href*="netlify.com"],
+div:has(> a[href*="netlify.com"]) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  position: absolute !important;
+  left: -9999px !important;
+  z-index: -9999 !important;
+}
+
 body {
   font-family: 'Outfit', sans-serif;
   background-color: var(--ivory);

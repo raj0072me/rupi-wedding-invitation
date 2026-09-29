@@ -526,12 +526,12 @@ export default function QuestionnairePage() {
                         inputMode="numeric"
                         pattern="[0-9 ]*"
                         maxLength={11}
-                        placeholder="98996 54695"
+                        placeholder="98765 43210"
                         value={formData.mobile_1}
                         onChange={(e) => updateField("mobile_1", formatMobileNumber(e.target.value))}
                         className="wedding-input tracking-wider font-mono text-base"
                       />
-                      <p className="field-note">✦ 10 digits (e.g. 98996 54695)</p>
+                      <p className="field-note">✦ 10 digits (e.g. 98765 43210)</p>
                     </div>
                     <div>
                       <label className="field-label" htmlFor="mobile_2">
